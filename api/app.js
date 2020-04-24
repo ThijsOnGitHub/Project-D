@@ -1,7 +1,9 @@
-var express = require("express");
-var fileUpload = require("express-fileupload");
-var tensorFlow = require("@tensorflow/tfjs-node");
-var bodyPix = require("@tensorflow-models/body-pix");
+const express = require("express");
+const fileUpload = require("express-fileupload");
+const tensorFlow = require("@tensorflow/tfjs-node");
+const bodyPix = require("@tensorflow-models/body-pix");
+const { createCanvas } = require('canvas')
+Canvas = require('canvas')
 
 var app = express();
 app.use(fileUpload());
@@ -11,30 +13,26 @@ app.get("/", (req, res, next) => {
 });
 
 app.post("/measure", async(req, res, next) => {
-    var image = req.files.image;
-console.log(image);
+    const image = req.files.image;
 
+    const img = new Canvas.Image;
+    img.src = image.data;
+
+    const canvas = createCanvas(img.width, img.height);
+    const context = canvas.getContext("2d");
+    context.drawImage(img, 0, 0);
+    const input = tensorFlow.browser.fromPixels(canvas);
+    
     const net = await bodyPix.load({
         architecture: 'ResNet50',
         outputStride: 16
     });
 
-    const segmentation = await net.segmentPersonParts(image);
+    const segmentation = await net.segmentPersonParts(input);
 
-console.log(segmentation);
-
-    res.json(["test"]);
+    res.json(segmentation);
 });
 
 app.listen(3000, () => {
     console.log("Server running on port 3000, http://localhost:3000");
 });
-
-// const loadAndPredict = async()=> {
-//     const net = await bodyPix.load({
-//         architecture: 'ResNet50',
-//         outputStride: 16
-//     });
-
-//     const segmentation = await net.segmentPersonParts(img);
-// }
