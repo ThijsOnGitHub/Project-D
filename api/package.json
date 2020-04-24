@@ -1,0 +1,14 @@
+{
+    "name": "api",
+    "version": "1.0.0",
+    "description": "This is an api application",
+    "main": "app.js",
+    "dependencies": {
+        "@tensorflow-models/body-pix": "^2.0.5",
+        "@tensorflow/tfjs-node": "^1.7.3",
+        "express": "^4.17.1",
+        "express-fileupload": "^1.1.7-alpha.3",
+        "node-gyp": "^6.1.0",
+        "node-pre-gyp": "^0.14.0"
+    }
+}
