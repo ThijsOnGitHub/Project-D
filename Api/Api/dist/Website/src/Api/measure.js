@@ -44,8 +44,6 @@ function MeasureBodyParts(img, canvas) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    console.log("start");
-                    console.log(img);
                     loadAndPredict = function () { return __awaiter(_this, void 0, void 0, function () {
                         var net, segmentation, mask, includeParts, heupMaat, borstMaat;
                         return __generator(this, function (_a) {
@@ -76,7 +74,7 @@ function MeasureBodyParts(img, canvas) {
                                     if (canvas != null) {
                                         drawSkeleton(segmentation, canvas);
                                     }
-                                    console.log(segmentation);
+                                    //console.log(segmentation);
                                     return [2 /*return*/, { borstMaat: borstMaat, heupMaat: heupMaat }];
                                 case 3: throw new Error("Image is null");
                             }
@@ -91,7 +89,7 @@ function MeasureBodyParts(img, canvas) {
 exports.MeasureBodyParts = MeasureBodyParts;
 function drawSkeleton(mask, canvas) {
     var poses = mask.allPoses.sort(function (a, b) { return b.score - a.score; });
-    console.log(poses);
+    //console.log(poses)
     var pose = poses[0];
     pose.keypoints.forEach(function (value) {
         drawPoint(canvas, value.position.x, value.position.y, "red");
@@ -111,26 +109,26 @@ function drawPoint(canvas, x, y, kleur) {
         ctx === null || ctx === void 0 ? void 0 : ctx.fillRect(x - 2.5, y - 2.5, 5, 5);
     }
     else {
-        console.log("canvas null");
+        //console.log("canvas null")
     }
 }
 function clacLengte(mask, yLijn, mesurePart, canvas) {
     var beginPixel = mask.width * yLijn;
     var eindPixel = beginPixel + mask.width;
     var outlinePixelNumber = [];
-    console.log(beginPixel);
+    //console.log(beginPixel)
     for (var i = beginPixel; i < eindPixel; i++) {
         var checkPixel = mask.data[i];
         var nextPixel = mask.data[i + 1];
-        console.log(i, checkPixel, nextPixel);
+        //console.log(i,checkPixel,nextPixel)
         if ((mesurePart.includes(checkPixel) && !mesurePart.includes(nextPixel)) || (mesurePart.includes(nextPixel) && !mesurePart.includes(checkPixel))) {
             outlinePixelNumber.push(i);
         }
     }
     outlinePixelNumber.sort(function (a, b) { return b - a; });
-    console.log(outlinePixelNumber);
+    //console.log(outlinePixelNumber)
     if (canvas != undefined) {
-        console.log("color green!");
+        //console.log("color green!")
         outlinePixelNumber.forEach(function (value) {
             drawPoint(canvas, value % mask.width, yLijn, "darkblue");
         });
@@ -139,7 +137,7 @@ function clacLengte(mask, yLijn, mesurePart, canvas) {
 }
 function mesurePart(mask, yLijnFunc, dectNum, canvas) {
     var poses = mask.allPoses.sort(function (a, b) { return b.score - a.score; });
-    console.log(poses);
+    //console.log(poses)
     var pose = poses[0];
     //@ts-ignore
     var poseData = {};
@@ -147,12 +145,12 @@ function mesurePart(mask, yLijnFunc, dectNum, canvas) {
         //@ts-ignore
         poseData[value.part] = value;
     });
-    console.log(poseData);
+    //console.log(poseData)
     var yLijn = yLijnFunc(poseData);
     if (canvas != undefined) {
         drawLine(canvas, yLijn);
     }
-    console.log(yLijn);
+    //console.log(yLijn)
     var lengte = clacLengte(mask, yLijn, dectNum, canvas);
     return lengte;
 }
