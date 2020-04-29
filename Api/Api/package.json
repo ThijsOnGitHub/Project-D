@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./dist/Api/index.js",
+    "run": "node ./dist/Api/index.js",
+    "start":"tsc && npm run run",
     "build": "tsc",
     "tsc": "tsc"
   },
