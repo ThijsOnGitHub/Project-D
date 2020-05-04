@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "noImplicitAny": true,
+      "allowJs": true,
+      "moduleResolution": "node",
+      "skipLibCheck": true
+  },
+  "files":[
+    "index.ts"
+  ]
+}
