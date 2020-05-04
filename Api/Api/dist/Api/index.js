@@ -36,9 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var measure = require("../Website/src/Api/measure");
+var measure = require("../Website/src/measure_Function/measure");
 var fs = require("fs");
 var tfjs = require("@tensorflow/tfjs-node");
+require("../Website/src/measure_Function/partFuncties");
+var partFuncties_1 = require("../Website/src/measure_Function/partFuncties");
 function loadImage(path) {
     return __awaiter(this, void 0, void 0, function () {
         var file, image;
@@ -65,7 +67,7 @@ function start() {
                 ];
                 case 1:
                     image = _a.sent();
-                    return [4 /*yield*/, measure.MeasureBodyParts(image)];
+                    return [4 /*yield*/, measure.MeasureBodyParts(image, { "heupMaat": partFuncties_1.bodyPartFuncs.heup })];
                 case 2:
                     resultaat = _a.sent();
                     console.log(resultaat);
