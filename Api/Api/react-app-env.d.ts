@@ -1,6 +1,6 @@
 // <reference types=react-scripts />
-
 import { Keypoint } from  "@tensorflow-models/body-pix/dist/types";
+import * as bodypix from '@tensorflow-models/body-pix'
 
 export interface BodyParts{
 nose: Keypoint 
@@ -21,3 +21,5 @@ rightKnee: Keypoint
 leftAnkle: Keypoint 
 rightAnkle: Keypoint
 }
+
+export type PartFunc= (segmentation:bodypix.SemanticPartSegmentation,canvas:HTMLCanvasElement)=>number

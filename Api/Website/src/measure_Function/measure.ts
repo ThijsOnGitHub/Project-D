@@ -1,10 +1,11 @@
 import { Keypoint, BodyPixInput, ImageType } from '@tensorflow-models/body-pix/dist/types';
 import * as bodyPix from '@tensorflow-models/body-pix';
-import { BodyParts } from '../react-app-env';
+import { BodyParts, PartFunc } from '../react-app-env';
+import { bodyPartFuncs } from './partFuncties';
 
 
 
-export async function MeasureBodyParts(img: BodyPixInput ,canvas?:HTMLCanvasElement|null):Promise<{borstMaat:number,heupMaat:number}>{
+export async function MeasureBodyParts<T extends {[partName:string]:PartFunc}>(img: BodyPixInput ,PartFuncs:T,canvas?:HTMLCanvasElement|null):Promise<{[name:string]:number}>{
       //console.log("start")
       //console.log(img)
 
@@ -30,22 +31,18 @@ export async function MeasureBodyParts(img: BodyPixInput ,canvas?:HTMLCanvasElem
               }
               
               //This section measures the body parts with the custom functions and returns an object of it
-              var includeParts=[2,3,4,5,12,13]
-              var heupMaat=mesurePart(segmentation,(parts)=>{
-                var res=Math.round((parts.leftHip.position.y+parts.rightHip.position.y)/2)
-                return res
-              },includeParts,canvas || undefined)
 
-              var borstMaat=mesurePart(segmentation,(parts)=>{
-                var res=Math.round((parts.leftShoulder.position.y+parts.rightShoulder.position.y)/2)
-                return res
-              },includeParts,canvas || undefined)
-
-              //console.log(segmentation);
-
-              return {borstMaat:borstMaat,heupMaat:heupMaat}
-
+              var object:Partial<{[name:string]:number}>= {};
               
+              //All the functions
+              Object.entries(PartFuncs).forEach((value)=>{
+                object[value[0]]=value[1](segmentation,canvas == null ? undefined : canvas)
+              })
+              
+              return object as {[name:string]:number}
+
+
+
             }else{
               throw new Error("Image is null")
             }
@@ -133,8 +130,9 @@ export async function MeasureBodyParts(img: BodyPixInput ,canvas?:HTMLCanvasElem
     }
 
     outlinePixelNumber.sort((a,b)=>b-a)
-    //console.log(outlinePixelNumber)
+    console.log(outlinePixelNumber)
 
+    console.log(canvas)
     //if a canvas is defined it draws the transition points
     if(canvas!=undefined){
       //console.log("color green!")
@@ -159,7 +157,7 @@ export async function MeasureBodyParts(img: BodyPixInput ,canvas?:HTMLCanvasElem
    * 
    * @returns The function returns the width of the parts you want to measure
    */
-  function mesurePart(mask:bodyPix.SemanticPartSegmentation,yLijnFunc:(parts:BodyParts)=>number,mesurePart:number[],canvas?:HTMLCanvasElement){
+export function measurePart(mask:bodyPix.SemanticPartSegmentation,yLijnFunc:(parts:BodyParts)=>number,mesurePart:number[],canvas?:HTMLCanvasElement):number{
     
     //It selects the most confident pose
     var poses =mask.allPoses.sort((a , b) => b.score - a.score  )

@@ -3,7 +3,8 @@ import React from 'react';
 import './App.css';
 import { Keypoint, Pose, BodyPixInput, ImageType } from '@tensorflow-models/body-pix/dist/types';
 import {  BodyParts } from './react-app-env';
-import { MeasureBodyParts } from './Api/measure';
+import { MeasureBodyParts } from './measure_Function/measure';
+import { bodyPartFuncs } from './measure_Function/partFuncties';
 
 interface Istate{
   loading:boolean
@@ -66,8 +67,8 @@ class App extends React.Component<Iprops,Istate>{
   printData=async()=>{
     this.setState({loading:true})
     if(this.image.current!= null){
-      var result=await MeasureBodyParts(this.image.current,this.canvas.current)
-      this.setState(result)
+      var result=await MeasureBodyParts(this.image.current,{heupMaat:bodyPartFuncs.heup,borstMaat:bodyPartFuncs.borst},this.canvas.current)
+      this.setState({heupMaat:result.heupMaat,borstMaat:result.borstMaat})
     }
     this.setState({loading:false})
   }

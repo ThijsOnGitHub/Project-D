@@ -20,6 +20,6 @@
     "jsx": "react"
   },
   "include": [
-    "src", "src/Api/measure.ts", "setupTests.ts"
+    "src", "src/measure_Function/measure.ts", "setupTests.ts"
   ]
 }

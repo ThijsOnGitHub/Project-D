@@ -21,3 +21,5 @@ rightKnee: Keypoint
 leftAnkle: Keypoint 
 rightAnkle: Keypoint
 }
+
+export type PartFunc= (segmentation:bodyPix.SemanticPartSegmentation,canvas?:HTMLCanvasElement)=>number
