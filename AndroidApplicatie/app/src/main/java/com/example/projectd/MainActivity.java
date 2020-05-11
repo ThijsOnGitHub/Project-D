@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.imgCapture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File file = new File(Environment.getExternalStorageDirectory() + "/" + System.currentTimeMillis() + ".png");
+                File file = new File( getFilesDir()+ "/" + System.currentTimeMillis() + ".png");
                 imgCap.takePicture(file, new ImageCapture.OnImageSavedListener() {
                     @Override
                     public void onImageSaved(@NonNull File file) {
