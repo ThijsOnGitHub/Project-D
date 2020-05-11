@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
         }
     }
+
+
     private void startCamera() {
 
         CameraX.unbindAll();

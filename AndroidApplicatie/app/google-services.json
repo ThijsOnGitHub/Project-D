@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1096250985483",
+    "firebase_url": "https://project-d-c4060.firebaseio.com",
+    "project_id": "project-d-c4060",
+    "storage_bucket": "project-d-c4060.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096250985483:android:a9d00cfe975203cc034b0e",
+        "android_client_info": {
+          "package_name": "com.example.projectd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096250985483-fijh8rvprofvdnkh8b0markga99rv63b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApTn168Ck6QKIWDNIOnqbiaCuzn_uHTHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096250985483-fijh8rvprofvdnkh8b0markga99rv63b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
