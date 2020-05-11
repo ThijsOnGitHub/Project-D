@@ -7,7 +7,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a3c91c96-14a8-487b-b09e-12b48115b0f9" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../TensorflowTest/app/src/main/java/com/example/tensorflowtest/HelloTensorFlow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AndroidApplicatie/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../AndroidApplicatie/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AndroidApplicatie/app/src/main/java/com/example/projectd/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../AndroidApplicatie/app/src/main/java/com/example/projectd/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AndroidApplicatie/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AndroidApplicatie/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,6 +19,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="B2NGAA8851615197" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -28,7 +33,7 @@
     </system>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$USER_HOME$" />
   </component>
   <component name="ProjectId" id="1bfQMu7nnFUrW5hSsueGqm5cPUn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
