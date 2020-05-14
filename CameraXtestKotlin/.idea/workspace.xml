@@ -6,17 +6,13 @@
     </shared>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a3c91c96-14a8-487b-b09e-12b48115b0f9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../AndroidApplicatie/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AndroidApplicatie/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="a3c91c96-14a8-487b-b09e-12b48115b0f9" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="B2NGAA8851615197" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -37,7 +33,7 @@
   <component name="PropertiesComponent">
     <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="B2NGAA8851615197" />
     <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-09T11:06:22.754Z" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../Project-D/AndroidApplicatie" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../AndroidApplicatie" />
     <property name="settings.editor.selected.configurable" value="preferences.language.Kotlin" />
   </component>
   <component name="RunDashboard">
