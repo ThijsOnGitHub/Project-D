@@ -1,12 +1,11 @@
 package com.example.projectd;
 
+import android.os.Looper;
+import android.util.Size;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.Camera;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.CameraX;
-import androidx.camera.core.Preview;
+import androidx.camera.core.*;
 import androidx.camera.core.impl.PreviewConfig;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
@@ -33,7 +32,9 @@ import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -51,9 +52,8 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
 
         //Assign uit de layout
-        mImageView = findViewById(R.id.image_view);
         mMaakFotoBtn = findViewById(R.id.camera_maakFoto_btn);
-        
+
         //request a CameraProvider
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
@@ -61,7 +61,7 @@ public class CameraActivity extends AppCompatActivity {
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                bindPreview(cameraProvider);
+                bindPreview(this,cameraProvider);
             } catch (ExecutionException | InterruptedException e) {
                 // No errors need to be handled for this Future.
                 // This should never be reached.
@@ -90,7 +90,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     //Select a camera and bind the life cycle and use cases
-    void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
+    void bindPreview(Context context,@NonNull ProcessCameraProvider cameraProvider) {
         Preview preview = new Preview.Builder()
                 .build();
 
@@ -98,16 +98,52 @@ public class CameraActivity extends AppCompatActivity {
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
-        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
+
+        ImageAnalysis imageAnalysis =
+                new ImageAnalysis.Builder()
+                        .setTargetResolution(new Size(1280, 720))
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                        .build();
+
+        ImageCapture imageCapture =
+                new ImageCapture.Builder()
+                        .build();
+        
+
+        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview,imageAnalysis,imageCapture);
+
+        ImageCapture.OutputFileOptions outputFileOptions =
+                new ImageCapture.OutputFileOptions.Builder(new File(getFilesDir()+ "/" + System.currentTimeMillis() + ".jpeg")).build();
+
+        mMaakFotoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(context),
+                        new ImageCapture.OnImageSavedCallback() {
+                            @Override
+                            public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
+                                String msg = "Pic captured at " + getFilesDir().toString();
+                                Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
+                            }
+                            @Override
+                            public void onError(ImageCaptureException error) {
+                                String msg = "Something went wrong";
+                                Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
+                            }
+                        });
+            }
+        });
+
+
+        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context),new QrCodeAnlyzer());
 
         PreviewView previewView = findViewById(R.id.preview_view);
         preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.getCameraInfo()));
 
     }
 
-
+    //Deze functie voert de anlyses op de camera uit
     private void openCamera() {
-
 
     }
 

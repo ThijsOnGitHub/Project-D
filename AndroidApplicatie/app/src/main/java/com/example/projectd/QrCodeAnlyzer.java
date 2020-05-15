@@ -1,5 +1,6 @@
 package com.example.projectd;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class QrCodeAnlyzer implements ImageAnalysis.Analyzer {
+
     private int degreesToFirebaseRotation(int degrees) {
         switch (degrees) {
             case 0:
@@ -104,10 +106,21 @@ public class QrCodeAnlyzer implements ImageAnalysis.Analyzer {
                 });
     }
 
+    @SuppressLint("UnsafeExperimentalUsageError")
     @Override
-    public void analyze(ImageProxy imageProxy, int degrees) {
+    public void analyze(@NonNull ImageProxy imageProxy) {
+        int degrees = imageProxy.getImageInfo().getRotationDegrees();
+        if (imageProxy == null || imageProxy.getImage() == null) {
+            return;
+        }
+        Image mediaImage = imageProxy.getImage();
 
-
-
+        int rotation = degreesToFirebaseRotation(degrees);
+        FirebaseVisionImage image =
+                FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
+        // Pass image to an ML Kit Vision API
+        Log.i("inf:","test1234");
+        giveResults(image);
+        imageProxy.close();
     }
 }
