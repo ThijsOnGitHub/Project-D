@@ -1,16 +1,12 @@
 package com.example.projectd;
 
+import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraX;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureConfig;
-import androidx.camera.core.Preview;
-import androidx.camera.core.PreviewConfig;
+import androidx.camera.core.*;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -18,8 +14,6 @@ import androidx.lifecycle.LifecycleOwner;
 
 import android.content.pm.PackageManager;
 import android.graphics.Matrix;
-import android.os.Bundle;
-import android.os.Environment;
 import android.util.Rational;
 import android.util.Size;
 import android.view.Surface;
@@ -44,14 +38,14 @@ public class MainActivity extends AppCompatActivity {
         textureView = findViewById(R.id.view_finder);
 
         if(allPermissionsGranted()){
-            startCamera(); //start camera if permission has been granted by user
+            startCamera(this); //start camera if permission has been granted by user
         } else{
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
         }
     }
 
 
-    private void startCamera() {
+    private void startCamera(Context context) {
 
         CameraX.unbindAll();
 
@@ -81,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation()).build();
         final ImageCapture imgCap = new ImageCapture(imageCaptureConfig);
 
+
         findViewById(R.id.imgCapture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
                 imgCap.takePicture(file, new ImageCapture.OnImageSavedListener() {
                     @Override
                     public void onImageSaved(@NonNull File file) {
+                        QrCodeAnlyzer qrCodeAnlyzer = new QrCodeAnlyzer();
+                        qrCodeAnlyzer.ScanQRcodeFile(context,file);
                         String msg = "Pic captured at " + file.getAbsolutePath();
                         Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
                     }
@@ -103,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
 
         //bind to lifecycle:
         CameraX.bindToLifecycle((LifecycleOwner)this, preview, imgCap);
@@ -145,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == REQUEST_CODE_PERMISSIONS){
             if(allPermissionsGranted()){
-                startCamera();
+                startCamera(this);
             } else{
                 Toast.makeText(this, "Permissions not granted by the user.", Toast.LENGTH_SHORT).show();
                 finish();
