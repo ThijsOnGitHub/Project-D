@@ -3,10 +3,24 @@ package com.example.projectd;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.Camera;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.CameraX;
+import androidx.camera.core.Preview;
+import androidx.camera.core.impl.PreviewConfig;
+import androidx.camera.core.Preview;
+import androidx.camera.view.PreviewView;
+import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import com.google.common.util.concurrent.ListenableFuture;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,6 +31,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.ExecutionException;
+
 public class CameraActivity extends AppCompatActivity {
 
     //Permission code voor toestemming camera & opslag
@@ -25,15 +43,31 @@ public class CameraActivity extends AppCompatActivity {
     Button mMaakFotoBtn;
     ImageView mImageView;
     Uri afbeelding_uri;
+    Preview previewView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
         //Assign uit de layout
         mImageView = findViewById(R.id.image_view);
         mMaakFotoBtn = findViewById(R.id.camera_maakFoto_btn);
+        
+        //request a CameraProvider
+        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+
+        //check for CameraProvider availability
+        cameraProviderFuture.addListener(() -> {
+            try {
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                bindPreview(cameraProvider);
+            } catch (ExecutionException | InterruptedException e) {
+                // No errors need to be handled for this Future.
+                // This should never be reached.
+            }
+        }, ContextCompat.getMainExecutor(this));
+
 
         //Op maakFotoKnop gedrukt
         mMaakFotoBtn.setOnClickListener(new View.OnClickListener() {
@@ -55,15 +89,26 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
-    private void openCamera() {
-        //Camera intent & gemaakte afbeelding opslaan
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.DESCRIPTION, "Project-D");
-        afbeelding_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    //Select a camera and bind the life cycle and use cases
+    void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
+        Preview preview = new Preview.Builder()
+                .build();
 
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, afbeelding_uri);
-        startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
+        CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build();
+
+        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
+
+        PreviewView previewView = findViewById(R.id.preview_view);
+        preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.getCameraInfo()));
+
+    }
+
+
+    private void openCamera() {
+
+
     }
 
     //Resultaat van gevraagde toestemming afhandelen.
@@ -83,7 +128,8 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //Afbeelding met camera gemaakt, toon in imageView.
-        if(resultCode == RESULT_OK){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
             mImageView.setImageURI(afbeelding_uri);
         }
     }
