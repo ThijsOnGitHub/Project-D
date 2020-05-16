@@ -1,11 +1,16 @@
 package com.example.projectd;
 
 import android.os.Looper;
+import android.util.Log;
+import android.util.Rational;
 import android.util.Size;
+import android.view.Surface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.*;
+import androidx.camera.core.impl.CaptureProcessor;
+import androidx.camera.core.impl.ImageProxyBundle;
 import androidx.camera.core.impl.PreviewConfig;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
@@ -74,7 +79,12 @@ public class CameraActivity extends AppCompatActivity {
 
     //Select a camera and bind the life cycle and use cases
     void bindPreview(Context context,@NonNull ProcessCameraProvider cameraProvider) {
+        PreviewView previewView = findViewById(R.id.preview_view);
+
+        Size size = new Size (previewView.getWidth(),previewView.getHeight());
+
         Preview preview = new Preview.Builder()
+                .setTargetResolution(size)
                 .build();
 
         CameraSelector cameraSelector = new CameraSelector.Builder()
@@ -91,12 +101,11 @@ public class CameraActivity extends AppCompatActivity {
         ImageCapture imageCapture =
                 new ImageCapture.Builder()
                         .build();
-        
 
-        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview,imageAnalysis,imageCapture);
 
-        ImageCapture.OutputFileOptions outputFileOptions =
-                new ImageCapture.OutputFileOptions.Builder(new File(getFilesDir()+ "/" + System.currentTimeMillis() + ".jpeg")).build();
+        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview,imageCapture);
+
+        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(new File(getFilesDir()+ "/" + System.currentTimeMillis() + ".jpeg")).build();
 
         mMaakFotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,8 +128,7 @@ public class CameraActivity extends AppCompatActivity {
 
 
         imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context),new QrCodeAnlyzer());
-
-        PreviewView previewView = findViewById(R.id.preview_view);
+        
         preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.getCameraInfo()));
 
     }
