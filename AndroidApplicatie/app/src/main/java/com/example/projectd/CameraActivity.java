@@ -69,23 +69,6 @@ public class CameraActivity extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
 
 
-        //Op maakFotoKnop gedrukt
-        mMaakFotoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Indien geen toestemming voor camera en opslag
-                if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                        checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                    //Om toestemming vragen.
-                    String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                    requestPermissions(permission, PERMISSION_CODE);
-                }else{
-                    //Heeft toestemming
-                    openCamera();
-                }
-            }
-        });
 
     }
 
@@ -140,33 +123,5 @@ public class CameraActivity extends AppCompatActivity {
         PreviewView previewView = findViewById(R.id.preview_view);
         preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.getCameraInfo()));
 
-    }
-
-    //Deze functie voert de anlyses op de camera uit
-    private void openCamera() {
-
-    }
-
-    //Resultaat van gevraagde toestemming afhandelen.
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case PERMISSION_CODE: {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    openCamera();
-                }else{
-                    Toast.makeText(this, "Benodigde toestemming geweigerd.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        //Afbeelding met camera gemaakt, toon in imageView.
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            mImageView.setImageURI(afbeelding_uri);
-        }
     }
 }
