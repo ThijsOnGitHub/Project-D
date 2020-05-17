@@ -3,6 +3,9 @@
     "version": "1.0.0",
     "description": "This is an api application",
     "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
+    },
     "dependencies": {
         "@tensorflow-models/body-pix": "^2.0.5",
         "@tensorflow/tfjs-node": "^1.7.3",
