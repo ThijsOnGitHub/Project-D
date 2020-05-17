@@ -3,7 +3,6 @@ package com.example.projectd;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.media.Image;
 import android.net.Uri;
 import android.util.Log;
@@ -19,11 +18,18 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+
 public class QrCodeAnlyzer implements ImageAnalysis.Analyzer {
+
+    private  CameraActivity cameraActivity;
+
+    QrCodeAnlyzer( CameraActivity cameraActivity){
+        super();
+        this.cameraActivity =cameraActivity;
+   }
 
     private int degreesToFirebaseRotation(int degrees) {
         switch (degrees) {
@@ -41,62 +47,58 @@ public class QrCodeAnlyzer implements ImageAnalysis.Analyzer {
         }
     }
 
-    public void ScanQRcodeFile(Context context,File imageFile){
-        Log.i( "self","inf Scan started");
+    //Na foto maken owrdt
+    public void ScanQRcodeFile(Context context,Uri imageFile){
+        Log.i( "self","inf Scan started on image:"+imageFile.toString());
         FirebaseVisionImage image;
         try {
-            image = FirebaseVisionImage.fromFilePath(context, Uri.parse("file://"+imageFile.getAbsolutePath()));
-            giveResults(image);
+            image = FirebaseVisionImage.fromFilePath(context, imageFile);
+            setVerhoudingsGetal(image);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
-    private void giveResults(FirebaseVisionImage image){
-        FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance().getVisionBarcodeDetector();
+    private void setVerhoudingsGetal(FirebaseVisionImage image){
+        getBarcodesTask(image)
+            .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+            @Override
+            public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
+                // Task completed successfully
+                // ...
+                Log.i("barcodes",barcodes.toString());
+                for (FirebaseVisionBarcode barcode: barcodes) {
+                    //Alleen als de waarde van de qr-code start met
+                    String rawValue =barcode.getRawValue();
+                    Log.i("Qr code data",rawValue);
+                    Log.i("Match Data",rawValue.matches("^TashiraApp.*")?"true":"false");
+                    if(rawValue.matches("^TashiraApp.*")){
 
-        Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
-                .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
-                    @Override
-                    public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
-                        // Task completed successfully
-                        // ...
-                        for (FirebaseVisionBarcode barcode: barcodes) {
-                            Point[] corners = barcode.getCornerPoints();
-                            for (int i = 0; i < corners.length; i++) {
-                                Log.i("inf: corners", corners[i].toString());
-                            }
-                            Point point1 = corners[0];
-                            Point point2 = corners[1];
-
-                            double length = Math.sqrt(Math.pow(point2.x - point1.x, 2) - Math.pow(point2.y - point1.y, 2));
-                            Log.i("inf: length", Double.toString(length));
-
-                            String rawValue = barcode.getRawValue();
-                            Log.i("inf: data",rawValue);
-
-                            int valueType = barcode.getValueType();
-                            // See API reference for complete list of supported types
-                            switch (valueType) {
-                                case FirebaseVisionBarcode.TYPE_WIFI:
-                                    String ssid = barcode.getWifi().getSsid();
-                                    String password = barcode.getWifi().getPassword();
-                                    int type = barcode.getWifi().getEncryptionType();
-                                    break;
-                                case FirebaseVisionBarcode.TYPE_URL:
-                                    String title = barcode.getUrl().getTitle();
-                                    String url = barcode.getUrl().getUrl();
-                                    break;
-                                case FirebaseVisionBarcode.TYPE_TEXT:
-                                    Log.i("inf text", barcode.getRawValue());
-                                    break;
-                            }
-
+                        Point[] corners = barcode.getCornerPoints();
+                        for (int i = 0; i < corners.length; i++) {
+                            Log.i("inf: corners", corners[i].toString());
                         }
+
+                        Point point1 = corners[0];
+                        Point point2 = corners[1];
+
+                        //Berekend het aantal centimeters tussen de punten
+                        double aantalPixelsBreed = Math.sqrt(Math.pow(point2.x - point1.x, 2) - Math.pow(point2.y - point1.y, 2));
+                        Log.i("aantal pixels", Double.toString(aantalPixelsBreed));
+
+                        //krijgt het aantal milimeters uit de qr-code
+                        String aantalMilimeter=rawValue.replace("TashiraApp ","");
+                        double aantalMilimetersBreed=Double.parseDouble(aantalMilimeter);
+
+                        Log.i("aantal milimeters",aantalMilimetersBreed+"");
+                        //Geeft een verhoudingsgetal
+                        double verhoudingsGetal= aantalMilimetersBreed/aantalPixelsBreed;
+                        Log.i("verhoudingsgetal",verhoudingsGetal+"");
+                        cameraActivity.setVerhoudingsGetal(verhoudingsGetal);
                     }
-                })
+                }
+            }
+            })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -105,11 +107,20 @@ public class QrCodeAnlyzer implements ImageAnalysis.Analyzer {
                     }
                 });
     }
+    //Geeft een task van de gedetecteerde barcodes
+    private Task<List<FirebaseVisionBarcode>> getBarcodesTask(FirebaseVisionImage image){
+        FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance().getVisionBarcodeDetector();
+
+        Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image);
+
+        return result;
+    }
 
     @SuppressLint("UnsafeExperimentalUsageError")
     @Override
     public void analyze(@NonNull ImageProxy imageProxy) {
         int degrees = imageProxy.getImageInfo().getRotationDegrees();
+
         if (imageProxy == null || imageProxy.getImage() == null) {
             return;
         }
@@ -119,8 +130,26 @@ public class QrCodeAnlyzer implements ImageAnalysis.Analyzer {
         FirebaseVisionImage image =
                 FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
         // Pass image to an ML Kit Vision API
-        Log.i("inf:","test1234");
-        giveResults(image);
+
+        getBarcodesTask(image).addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+            @Override
+            public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
+                // Task completed successfully
+                // ...
+                cameraActivity.changeBarcodeDetection(barcodes);
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Task failed with an exception
+                // ...
+                Log.i("inf:","Zo te zien is dit een failure");
+                e.getLocalizedMessage();
+            }
+        });
+
+        //Als deze functie wordt aangeroepen wordt de afbeelding opnieuw gescand
         imageProxy.close();
     }
 }
