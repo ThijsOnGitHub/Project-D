@@ -1,5 +1,7 @@
 package com.example.projectd;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.util.Size;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,6 +49,16 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
 
         mMaakFotoBtn= findViewById(R.id.camera_maakFoto_btn);
+
+        //Ask permission
+        if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+
+            //Om toestemming vragen.
+            String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(permission, PERMISSION_CODE);
+        }
+
         //request a CameraProvider
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
