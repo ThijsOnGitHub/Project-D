@@ -197,7 +197,7 @@ async function jsConvertImageElementToPoseData(image){
     var poses = segmentation.allPoses;
     var pose = poses[0];
 
-    var poseData = new BodyParts();
+    var poseData = BodyParts
     pose.keypoints.forEach((keyPoint) => {
         poseData[keyPoint.part] = keyPoint;
     });
@@ -205,22 +205,22 @@ async function jsConvertImageElementToPoseData(image){
     return poseData;
 }
 
-class BodyParts{
-    nose 
-    leftEye 
-    rightEye 
-    leftEar 
-    rightEar 
-    leftShoulder 
-    rightShoulder 
-    leftElbow 
-    rightElbow 
-    leftWrist 
-    rightWrist 
-    leftHip 
-    rightHip 
-    leftKnee 
-    rightKnee 
-    leftAnkle 
-    rightAnkle
-}
+var BodyParts=[
+    "nose",
+    "leftEye",
+    "rightEye", 
+    "leftEar",
+    "rightEar" ,
+    "leftShoulder", 
+    "rightShoulder", 
+    "leftElbow" ,
+    "rightElbow" ,
+    "leftWrist" ,
+    "rightWrist" ,
+    "leftHip" ,
+    "rightHip" ,
+    "leftKnee" ,
+    "rightKnee" ,
+    "leftAnkle" ,
+    "rightAnkle"
+]
