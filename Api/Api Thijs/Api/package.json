@@ -1,0 +1,24 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run": "node ./dist/Api/index.js",
+    "start":"tsc && npm run run",
+    "build": "tsc",
+    "tsc": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow-models/body-pix": "^2.0.4",
+    "@tensorflow/tfjs": "^1.7.0",
+    "@tensorflow/tfjs-node": "^1.7.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.2",
+    "ts-loader": "^7.0.1",
+    "typescript": "^3.8.3"
+  }
+}
