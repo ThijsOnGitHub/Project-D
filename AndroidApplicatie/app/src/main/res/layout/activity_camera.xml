@@ -18,9 +18,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!--Image view waar gemaakte foto getoont zal worden. -->
 
-    <!--Knop -->
+    <!--Maak Foto Knop -->
     <Button
         android:id="@+id/camera_maakFoto_btn"
         android:layout_width="70dp"
