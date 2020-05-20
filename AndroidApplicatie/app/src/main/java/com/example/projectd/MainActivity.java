@@ -11,25 +11,52 @@ import android.widget.*;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
-    ImageButton ToQRCodeButton;
+    Button ToQRCodeButton;
+    Button ToLengthButton;
+    Button HelpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getSupportActionBar().hide();
         this.setContentView(R.layout.activity_main);
+
+        //The Buttons
         ToQRCodeButton = findViewById(R.id.ToQRButton);
+        ToLengthButton = findViewById(R.id.ToLength);
+        HelpButton = findViewById(R.id.Help);
+
+        //The other pages
+        Intent camera = new Intent(MainActivity.this, CameraActivity.class);
+        Intent qr = new Intent(MainActivity.this, QRActivity.class);
+        Intent length = new Intent(MainActivity.this, LengthActivity.class);
+        Intent help = new Intent(MainActivity.this, HelpActivity.class);
+
+        //Check & Ask Permission
+        if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+            String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(permission, PERMISSION_CODE);
+        }
+
+        //OnClicks
         ToQRCodeButton.setOnClickListener(v -> {
-            //check & ask permission, or open camera
+
+            //Move this to the actual camera place
             if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
                     checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                 String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                 requestPermissions(permission, PERMISSION_CODE);
             }
             else{
-                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
-                startActivity(intent);
+                startActivity(camera);
             }
+        });
+        ToLengthButton.setOnClickListener(v ->{
+            startActivity(length);
+        });
+        HelpButton.setOnClickListener(v ->{
+            startActivity(help);
         });
     }
 }
