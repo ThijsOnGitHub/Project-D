@@ -31,9 +31,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity {
-
-    //Permission code voor toestemming camera & opslag
-
     //Qr code is aanwezig in de afbeelding
     private  boolean qrCodeDetected = false;
     //Qr code schaal
@@ -41,7 +38,6 @@ public class CameraActivity extends AppCompatActivity {
 
     public QrCodeAnlyzer qrCodeAnlyzer= new QrCodeAnlyzer(this);
     Button mMaakFotoBtn;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -1,7 +1,22 @@
 package com.example.projectd;
 
-public class HelpActivity {
-    //TODO Make layout
-    //TODO Button back
+import android.os.Bundle;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class HelpActivity extends AppCompatActivity {
     //TODO Add helpful information
+    //TODO make scrollable if needed
+    Button BackButton;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.getSupportActionBar().hide();
+        this.setContentView(R.layout.activity_help);
+        BackButton = findViewById(R.id.Terug);
+        BackButton.setOnClickListener(v ->{
+           finish();
+        });
+    }
 }

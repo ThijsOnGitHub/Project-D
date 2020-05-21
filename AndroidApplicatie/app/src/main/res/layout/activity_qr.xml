@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LengthActivity">
+    tools:context=".QRActivity">
 
     <!--Tashira logo-->
     <ImageView
@@ -31,49 +31,63 @@
         app:layout_constraintTop_toBottomOf="@+id/Logo"
         app:srcCompat="@drawable/ic_imageph_rose_24dp" />
 
-    <!--"Vul uw lengte in" text-->
+    <!--text-->
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vul uw lengte in"
+        android:text="Print deze QR code op een A4 blad."
         android:textColor="@color/HeaderText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="De QR code is 10 bij 10 centimeter"
+        android:textColor="@color/HeaderText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text" />
 
-    <!--Vul hier lengte in-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/entertext"
-        android:layout_width="100dp"
-        android:layout_height="75dp"
-        android:layout_marginEnd="35dp"
+    <ImageButton
+        android:id="@+id/print"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="75dp"
+        android:background="@drawable/btn_rounded"
+        android:contentDescription="Download File"
         app:layout_constraintBottom_toTopOf="@+id/Terug"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@android:drawable/stat_sys_download" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Lengte"
-            android:inputType="number"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-    </com.google.android.material.textfield.TextInputLayout>
 
-    <!--The CM after length-->
     <TextView
-        android:id="@+id/cmtext"
-        android:layout_width="40dp"
+        android:id="@+id/text3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CM"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="@+id/entertext"
-        app:layout_constraintStart_toEndOf="@+id/entertext"
-        app:layout_constraintTop_toTopOf="@+id/entertext" />
+        android:text="Hou dit blad voor u als de foto wordt gemaakt."
+        android:textColor="@color/HeaderText"
+        app:layout_constraintBottom_toTopOf="@+id/Camera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/print" />
 
     <!--OK button-->
+    <TextView
+        android:id="@+id/text4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Het programma gebruikt dit om de schaal te berekenen."
+        android:textColor="@color/HeaderText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text3" />
+
     <Button
         android:id="@+id/Camera"
         android:layout_width="125dp"
@@ -81,10 +95,10 @@
         android:background="@drawable/btn_rounded"
         android:text="Doorgaan"
         android:textColor="@color/HeaderText"
-        app:layout_constraintBottom_toTopOf="@+id/Terug"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/entertext" />
+        app:layout_constraintTop_toBottomOf="@+id/print" />
 
     <!--back button-->
     <Button
@@ -98,5 +112,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
