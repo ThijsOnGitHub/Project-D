@@ -19,17 +19,16 @@
         app:srcCompat="@drawable/logotashira" />
 
     <!--Image fill space-->
-    <!--TODO insert picture-->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        android:contentDescription="Empty Image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Logo"
-        app:srcCompat="@drawable/ic_imageph_rose_24dp" />
+        app:srcCompat="@drawable/backgroundimage"
+        android:contentDescription="Picture of a woman on a sky blue background" />
 
     <!--text-->
     <TextView
@@ -52,27 +51,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text" />
 
-    <ImageButton
+    <Button
         android:id="@+id/print"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="75dp"
         android:background="@drawable/btn_rounded"
-        android:contentDescription="Download File"
-        app:layout_constraintBottom_toTopOf="@+id/Terug"
+        android:text="print qr code"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/forward"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:srcCompat="@android:drawable/stat_sys_download" />
+        app:layout_constraintTop_toBottomOf="@+id/text2"
+        android:drawableRight="@android:drawable/stat_sys_download"/>
 
 
     <TextView
         android:id="@+id/text3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hou dit blad voor u als de foto wordt gemaakt."
+        android:text="Houd dit blad voor u als de foto wordt gemaakt."
         android:textColor="@color/HeaderText"
-        app:layout_constraintBottom_toTopOf="@+id/Camera"
+        app:layout_constraintBottom_toTopOf="@+id/forward"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/print" />
@@ -88,21 +88,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text3" />
 
+    <!--back button-->
+
     <Button
-        android:id="@+id/Camera"
+        android:id="@+id/forward"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/btn_rounded"
         android:text="Doorgaan"
         android:textColor="@color/HeaderText"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/print" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!--back button-->
     <Button
-        android:id="@+id/Terug"
+        android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp"

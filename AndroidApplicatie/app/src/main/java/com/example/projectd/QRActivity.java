@@ -11,32 +11,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class QRActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
-    ImageButton PrintQRButton;
+    Button PrintQRButton;
     Button ForwardButton;
     Button BackButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getSupportActionBar().hide();
-        this.setContentView(R.layout.activity_qr); //it does work but it gives an error here
-
-        Intent camera = new Intent(QRActivity.this, CameraActivity.class);
+        this.setContentView(R.layout.activity_qr);
         PrintQRButton = findViewById(R.id.print);
         PrintQRButton.setOnClickListener(v ->{
             //TODO insert print code here
         });
-        ForwardButton = findViewById(R.id.Camera);
+
+        Intent settings = new Intent(QRActivity.this, SettingsActivity.class);
+        ForwardButton = findViewById(R.id.forward);
         ForwardButton.setOnClickListener(v ->{
-            if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                requestPermissions(permission, PERMISSION_CODE);
-            }
-            else{
-                startActivity(camera);
-            }
+            startActivity(settings);
         });
-        BackButton = findViewById(R.id.Terug);
+        BackButton = findViewById(R.id.back);
         BackButton.setOnClickListener(v ->{
             finish();
         });

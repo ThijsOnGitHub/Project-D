@@ -20,19 +20,12 @@ public class LengthActivity extends AppCompatActivity {
 
         //TODO gather inputted length data
 
-        Intent camera = new Intent(LengthActivity.this, CameraActivity.class);
-        ForwardButton = findViewById(R.id.Camera);
+        Intent settings = new Intent(LengthActivity.this, SettingsActivity.class);
+        ForwardButton = findViewById(R.id.forward);
         ForwardButton.setOnClickListener(v ->{
-            if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                requestPermissions(permission, PERMISSION_CODE);
-            }
-            else{
-                startActivity(camera);
-            }
+                startActivity(settings);
         });
-        BackButton = findViewById(R.id.Terug);
+        BackButton = findViewById(R.id.back);
         BackButton.setOnClickListener(v ->{
             finish();
         });

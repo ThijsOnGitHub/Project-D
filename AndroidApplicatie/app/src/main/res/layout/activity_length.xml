@@ -19,17 +19,16 @@
         app:srcCompat="@drawable/logotashira" />
 
     <!--Image fill space-->
-    <!--TODO insert picture-->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        android:contentDescription="Empty Image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Logo"
-        app:srcCompat="@drawable/ic_imageph_rose_24dp" />
+        app:srcCompat="@drawable/backgroundimage"
+        android:contentDescription="Picture of a woman on a sky blue background" />
 
     <!--"Vul uw lengte in" text-->
     <TextView
@@ -38,21 +37,23 @@
         android:layout_height="wrap_content"
         android:text="Vul uw lengte in"
         android:textColor="@color/HeaderText"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!--Vul hier lengte in-->
+    <!--TODO change icon to CM-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/entertext"
         android:layout_width="100dp"
         android:layout_height="75dp"
         android:layout_marginEnd="35dp"
-        app:layout_constraintBottom_toTopOf="@+id/Terug"
+        app:layout_constraintBottom_toTopOf="@+id/forward"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toTopOf="@id/text">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -62,33 +63,33 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--The CM after length-->
     <TextView
-        android:id="@+id/cmtext"
-        android:layout_width="40dp"
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CM"
+        android:text="cm"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/HeaderText"
         app:layout_constraintBottom_toBottomOf="@+id/entertext"
         app:layout_constraintStart_toEndOf="@+id/entertext"
         app:layout_constraintTop_toTopOf="@+id/entertext" />
 
     <!--OK button-->
     <Button
-        android:id="@+id/Camera"
+        android:id="@+id/forward"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/btn_rounded"
         android:text="Doorgaan"
         android:textColor="@color/HeaderText"
-        app:layout_constraintBottom_toTopOf="@+id/Terug"
+        app:layout_constraintBottom_toTopOf="@+id/back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/entertext" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!--back button-->
     <Button
-        android:id="@+id/Terug"
+        android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp"

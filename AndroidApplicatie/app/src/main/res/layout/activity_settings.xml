@@ -19,17 +19,16 @@
         app:srcCompat="@drawable/logotashira" />
 
     <!--Image fill space-->
-    <!--TODO insert picture-->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        android:contentDescription="Empty Image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Logo"
-        app:srcCompat="@drawable/ic_imageph_rose_24dp" />
+        app:srcCompat="@drawable/backgroundimage"
+        android:contentDescription="Picture of a woman on a sky blue background" />
 
     <!--text-->
     <TextView
@@ -38,57 +37,81 @@
         android:layout_height="wrap_content"
         android:text="Vul de opties in"
         android:textColor="@color/HeaderText"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--Vul hier lengte in-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/entertext"
-        android:layout_width="100dp"
-        android:layout_height="75dp"
-        android:layout_marginEnd="35dp"
-        app:layout_constraintBottom_toTopOf="@+id/Terug"
+    <!--automatic photo switch-->
+    <Switch
+        android:id="@+id/text1"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:drawableStart="@drawable/bodyicon"
+        android:text="Maak automatisch een foto als ik in de juiste positie sta"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/Text"
+        app:layout_constraintBottom_toTopOf="@+id/forward"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toTopOf="@+id/text" />
+
+    <!--timer text-->
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="200dp"
+        android:layout_height="25dp"
+        android:drawableStart="@drawable/timericon"
+        android:text="Automatische foto na"
+        android:textColor="@color/Text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintBottom_toTopOf="@+id/back"
+        app:layout_constraintStart_toStartOf="@+id/text1"
+        app:layout_constraintTop_toBottomOf="@+id/text" />
+
+    <!--timer input-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/entertext"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        app:layout_constraintBottom_toBottomOf="@+id/text2"
+        app:layout_constraintEnd_toStartOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/text2">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Lengte"
             android:inputType="number"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <!--The CM after length-->
     <TextView
-        android:id="@+id/cmtext"
-        android:layout_width="40dp"
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CM"
+        android:text="s"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/HeaderText"
         app:layout_constraintBottom_toBottomOf="@+id/entertext"
-        app:layout_constraintStart_toEndOf="@+id/entertext"
+        app:layout_constraintEnd_toEndOf="@+id/text1"
         app:layout_constraintTop_toTopOf="@+id/entertext" />
 
-    <!--OK button-->
+    <!--continue button-->
     <Button
-        android:id="@+id/Camera"
+        android:id="@+id/forward"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/btn_rounded"
         android:text="Doorgaan"
         android:textColor="@color/HeaderText"
-        app:layout_constraintBottom_toTopOf="@+id/Terug"
+        app:layout_constraintBottom_toTopOf="@+id/back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/entertext" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!--back button-->
     <Button
-        android:id="@+id/Terug"
+        android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp"

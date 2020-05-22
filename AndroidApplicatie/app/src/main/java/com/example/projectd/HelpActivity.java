@@ -14,7 +14,7 @@ public class HelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.getSupportActionBar().hide();
         this.setContentView(R.layout.activity_help);
-        BackButton = findViewById(R.id.Terug);
+        BackButton = findViewById(R.id.back);
         BackButton.setOnClickListener(v ->{
            finish();
         });
