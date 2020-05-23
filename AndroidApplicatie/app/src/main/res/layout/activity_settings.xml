@@ -52,10 +52,10 @@
         android:text="Maak automatisch een foto als ik in de juiste positie sta"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/Text"
-        app:layout_constraintBottom_toTopOf="@+id/forward"
+        app:layout_constraintBottom_toTopOf="@+id/text2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text" />
+        app:layout_constraintTop_toBottomOf="@+id/text" />
 
     <!--timer text-->
     <TextView
@@ -96,30 +96,26 @@
         app:layout_constraintEnd_toEndOf="@+id/text1"
         app:layout_constraintTop_toTopOf="@+id/entertext" />
 
-    <!--continue button-->
     <Button
         android:id="@+id/forward"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/btn_rounded"
         android:text="Doorgaan"
         android:textColor="@color/HeaderText"
-        app:layout_constraintBottom_toTopOf="@+id/back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!--back button-->
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
     <Button
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/btn_rounded"
         android:text="Terug"
         android:textColor="@color/HeaderText"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,13 +57,13 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="75dp"
         android:background="@drawable/btn_rounded"
+        android:drawableRight="@android:drawable/stat_sys_download"
         android:text="print qr code"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/forward"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2"
-        android:drawableRight="@android:drawable/stat_sys_download"/>
+        app:layout_constraintTop_toTopOf="@+id/text" />
 
 
     <TextView
@@ -88,31 +88,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text3" />
 
-    <!--back button-->
-
     <Button
         android:id="@+id/forward"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/btn_rounded"
         android:text="Doorgaan"
         android:textColor="@color/HeaderText"
-        app:layout_constraintBottom_toTopOf="@+id/back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
     <Button
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/btn_rounded"
         android:text="Terug"
         android:textColor="@color/HeaderText"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
