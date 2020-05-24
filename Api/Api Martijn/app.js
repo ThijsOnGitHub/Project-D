@@ -80,7 +80,7 @@ async function jsMeasureChest(imageInformation, yLineChest){
     const chestFrontSize = await jsCalculateLineLength(yLineChest, imageInformation.frontImageSegmentation);
     const chestSideSize = await jsCalculateLineLength(yLineChest, imageInformation.sideImageSegmentation);
 
-    return jsCalculatePerimeter(chestFrontSize, chestSideSize);
+    return await jsCalculatePerimeter(chestFrontSize, chestSideSize, imageInformation.scale);
 }
 
 //#endregion
@@ -91,7 +91,7 @@ async function jsMeasureHip(imageInformation, yLineHip){
     const hipFrontSize = await jsCalculateLineLength(yLineHip, imageInformation.frontImageSegmentation);
     const hipSideSize = await jsCalculateLineLength(yLineHip, imageInformation.sideImageSegmentation);
 
-    return jsCalculatePerimeter(hipFrontSize, hipSideSize);
+    return await jsCalculatePerimeter(hipFrontSize, hipSideSize, imageInformation.scale);
 }
 
 //#endregion
@@ -102,7 +102,7 @@ async function jsMeasureWaist(imageInformation, yLineWaist){
     const waistFrontSize = await jsCalculateLineLength(yLineWaist, imageInformation.frontImageSegmentation);
     const waistSideSize = await jsCalculateLineLength(yLineWaist, imageInformation.sideImageSegmentation);
 
-    return jsCalculatePerimeter(waistFrontSize, waistSideSize);
+    return await jsCalculatePerimeter(waistFrontSize, waistSideSize, imageInformation.scale);
 }
 
 //#endregion
@@ -129,10 +129,12 @@ async function jsCalculateLineLength(yLine, segmentation){
     return outlinePixelNumber[0] - outlinePixelNumber[outlinePixelNumber.length-1];
 }
 
-async function jsCalculatePerimeter(width, depth){
+async function jsCalculatePerimeter(width, depth, scale){
     var a = width / 2;
     var b = depth / 2;
 
     //p≈ π(3(a+b)- √((3a+b)(a+3b)))
-    return Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)))
+    var perimeter = Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)));
+    
+    return  perimeter * scale;
 }
