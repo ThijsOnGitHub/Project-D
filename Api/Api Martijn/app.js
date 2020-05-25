@@ -117,15 +117,18 @@ async function jsCalculateLineLength(yLine, segmentation){
     var startPoint = segmentation.width * yLine;
     var endPoint = startPoint + segmentation.width;
     var outlinePixelNumber = [];
+    
+    // All parts excluding the head, arms and hand
+    var measureParts = [2,3,4,5,6,7,8,9,10,11,12,13];
 
     // Here the code cycles througt the point and detects a transition between parts
     for(var i = startPoint; i < endPoint; i++){
         var currentPixel = segmentation.data[i];
         var nextPixel = segmentation.data[i+1];
 
-        // It checks if there is a transition between the body and the rest
-        if((currentPixel != -1 && nextPixel == -1) || (nextPixel != -1 && currentPixel == -1)){
-            // It adds the point to the collection of points
+        //It checks if there is a transition between measureParts a other parts
+        if((measureParts.includes(currentPixel) && !measureParts.includes(nextPixel)) || (measureParts.includes(nextPixel) && !measureParts.includes(currentPixel))){
+            //It adds the point to the collection of points
             outlinePixelNumber.push(i);
         }
     }
