@@ -12,9 +12,12 @@ const bodyPix = require("@tensorflow-models/body-pix");
 // frontImage : file
 // sideImage : file
 // scale : number
-// yLineChest : number
-// yLineWaist : number
-// yLineHip : number
+// yLineChestFront : number
+// yLineChestSide : number
+// yLineWaistFront : number
+// yLineWaistSide : number
+// yLineHipFront : number
+// yLineHipSide : number
 
 var app = express();
 app.use(fileUpload());
@@ -31,9 +34,12 @@ app.post("/measure", async(req, res, next) => {
     const frontImage = await jsConvertImageToImageElement(req.files.frontImage);
     const sideImage = await jsConvertImageToImageElement(req.files.sideImage);
     const scale = req.scale;
-    const yLineChest = req.yLineChest;
-    const yLineWaist = req.yLineWaist;
-    const yLineHip = req.yLineHip;
+    const yLineChestFront = req.yLineChestFront;
+    const yLineChestSide = req.yLineChestSide;
+    const yLineHipFront = req.yLineHipFront;
+    const yLineHipSide = req.yLineHipSide;
+    const yLineWaistFront = req.yLineWaistFront;
+    const yLineWaistSide = req.yLineWaistSide;
 
     const imageInformation = {
         frontImage : frontImage,
@@ -43,9 +49,9 @@ app.post("/measure", async(req, res, next) => {
         scale : scale
     };
 
-    const chestSize = await jsMeasureChest(imageInformation, yLineChest);
-    const waistSize = await jsMeasureWaist(imageInformation, yLineWaist);
-    const hipSize = await jsMeasureHip(imageInformation, yLineHip);
+    const chestSize = await jsMeasureChest(imageInformation, yLineChestFront, yLineChestSide);
+    const hipSize = await jsMeasureHip(imageInformation, yLineHipFront, yLineHipSide);
+    const waistSize = await jsMeasureWaist(imageInformation, yLineWaistFront, yLineWaistSide);
 
     res.json({ 
         chestSize : chestSize,
@@ -76,33 +82,33 @@ async function jsConvertImageToImageElement(image){
 
 //#region Chest
 
-async function jsMeasureChest(imageInformation, yLineChest){
-    const chestFrontSize = await jsCalculateLineLength(yLineChest, imageInformation.frontImageSegmentation);
-    const chestSideSize = await jsCalculateLineLength(yLineChest, imageInformation.sideImageSegmentation);
+async function jsMeasureChest(imageInformation, yLineChestFront, yLineChestSide){
+    const chestSizeFront = await jsCalculateLineLength(yLineChestFront, imageInformation.frontImageSegmentation);
+    const chestSizeSide = await jsCalculateLineLength(yLineChestSide, imageInformation.sideImageSegmentation);
 
-    return await jsCalculatePerimeter(chestFrontSize, chestSideSize, imageInformation.scale);
+    return await jsCalculatePerimeter(chestSizeFront, chestSizeSide, imageInformation.scale);
 }
 
 //#endregion
 
 //#region Hip
 
-async function jsMeasureHip(imageInformation, yLineHip){
-    const hipFrontSize = await jsCalculateLineLength(yLineHip, imageInformation.frontImageSegmentation);
-    const hipSideSize = await jsCalculateLineLength(yLineHip, imageInformation.sideImageSegmentation);
+async function jsMeasureHip(imageInformation, yLineHipFront, yLineHipSide){
+    const hipSizeFront = await jsCalculateLineLength(yLineHipFront, imageInformation.frontImageSegmentation);
+    const hipSizeSide = await jsCalculateLineLength(yLineHipSide, imageInformation.sideImageSegmentation);
 
-    return await jsCalculatePerimeter(hipFrontSize, hipSideSize, imageInformation.scale);
+    return await jsCalculatePerimeter(hipSizeFront, hipSizeSide, imageInformation.scale);
 }
 
 //#endregion
 
 //#region Waist
 
-async function jsMeasureWaist(imageInformation, yLineWaist){
-    const waistFrontSize = await jsCalculateLineLength(yLineWaist, imageInformation.frontImageSegmentation);
-    const waistSideSize = await jsCalculateLineLength(yLineWaist, imageInformation.sideImageSegmentation);
+async function jsMeasureWaist(imageInformation, yLineWaistFront, yLineWaistSide){
+    const waistSizeFront = await jsCalculateLineLength(yLineWaistFront, imageInformation.frontImageSegmentation);
+    const waistSizeSide = await jsCalculateLineLength(yLineWaistSide, imageInformation.sideImageSegmentation);
 
-    return await jsCalculatePerimeter(waistFrontSize, waistSideSize, imageInformation.scale);
+    return await jsCalculatePerimeter(waistSizeFront, waistSizeSide, imageInformation.scale);
 }
 
 //#endregion
