@@ -33,13 +33,13 @@ app.get("/", (req, res, next) => {
 app.post("/measure", async(req, res, next) => {
     const frontImage = await jsConvertImageToImageElement(req.files.frontImage);
     const sideImage = await jsConvertImageToImageElement(req.files.sideImage);
-    const scale = req.scale;
-    const yLineChestFront = req.yLineChestFront;
-    const yLineChestSide = req.yLineChestSide;
-    const yLineHipFront = req.yLineHipFront;
-    const yLineHipSide = req.yLineHipSide;
-    const yLineWaistFront = req.yLineWaistFront;
-    const yLineWaistSide = req.yLineWaistSide;
+    const scale = req.body.scale;
+    const yLineChestFront = req.body.yLineChestFront;
+    const yLineChestSide = req.body.yLineChestSide;
+    const yLineHipFront = req.body.yLineHipFront;
+    const yLineHipSide = req.body.yLineHipSide;
+    const yLineWaistFront = req.body.yLineWaistFront;
+    const yLineWaistSide = req.body.yLineWaistSide;
 
     const imageInformation = {
         frontImage : frontImage,
