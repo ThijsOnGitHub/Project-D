@@ -32,17 +32,27 @@ app.get("/", (req, res, next) => {
 });
 
 app.post("/measure", async(req, res, next) => {
+    console.log("started Mesure")
+    console.log(req)
+    console.log("//////files!")
+    console.log(req.files)
+    console.log("//////frontImage")
+    console.log(req.files.frontImage)
+    console.log("//////sideImage")
+    console.log(req.files.sideImage)
+    console.log("//scaleFront")
     const frontImage = await jsConvertImageToImageElement(req.files.frontImage);
     const sideImage = await jsConvertImageToImageElement(req.files.sideImage);
-    const scaleFront = req.body.scaleFront;
-    const scaleSide = req.body.scaleSide;
-    const yLineChestFront = req.body.yLineChestFront;
-    const yLineChestSide = req.body.yLineChestSide;
-    const yLineHipFront = req.body.yLineHipFront;
-    const yLineHipSide = req.body.yLineHipSide;
-    const yLineWaistFront = req.body.yLineWaistFront;
-    const yLineWaistSide = req.body.yLineWaistSide;
+    const scaleFront =  parseFloat(req.query.scaleFront);
+    const scaleSide =parseFloat( req.query.scaleSide);
+    const yLineChestFront = parseFloat(req.query.yLineChestFront)
+    const yLineChestSide =parseFloat( req.query.yLineChestSide);
+    const yLineHipFront = parseFloat(req.query.yLineHipFront);
+    const yLineHipSide = parseFloat(req.query.yLineHipSide);
+    const yLineWaistFront =parseFloat(req.query.yLineWaistFront);
+    const yLineWaistSide = parseFloat(req.query.yLineWaistSide);
 
+    console.log(scaleFront)
     const imageInformation = {
         frontImage : frontImage,
         frontImageSegmentation : await jsGetSegmentation(frontImage),
@@ -52,9 +62,19 @@ app.post("/measure", async(req, res, next) => {
         scaleSide : scaleSide,
     };
 
+    console.log("chestsize")
     const chestSize = await jsMeasureChest(imageInformation, yLineChestFront, yLineChestSide);
+    console.log("hipsize")
     const hipSize = await jsMeasureHip(imageInformation, yLineHipFront, yLineHipSide);
+    console.log("wiastsize")
     const waistSize = await jsMeasureWaist(imageInformation, yLineWaistFront, yLineWaistSide);
+    console.log("done")
+
+    console.log({ 
+        chestSize : chestSize,
+        hipSize : hipSize,
+        waistSize : waistSize
+    })
 
     res.json({ 
         chestSize : chestSize,
