@@ -23,6 +23,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -35,11 +37,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity {
-
-    //Permission code voor toestemming camera & opslag
-    private static final int PERMISSION_CODE = 1000;
-    private static final int IMAGE_CAPTURE_CODE = 1001;
-
     //Qr code is aanwezig in de afbeelding
     private  boolean qrCodeDetected = false;
     //Qr code schaal
@@ -53,6 +50,7 @@ public class CameraActivity extends AppCompatActivity {
     //Data
     public QrCodeAnlyzer qrCodeAnlyzer= new QrCodeAnlyzer(this);
 
+
     //Elements
     Button mMaakFotoBtn;
     ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -62,7 +60,10 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        //Remove title & notification bar before setting the content view
+        this.getSupportActionBar().hide();
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.setContentView(R.layout.activity_camera);
 
         //Connect variables to views
         mMaakFotoBtn= findViewById(R.id.camera_maakFoto_btn);
@@ -79,14 +80,6 @@ public class CameraActivity extends AppCompatActivity {
 
 
 
-        //Ask permission
-        if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-            //Om toestemming vragen.
-            String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            requestPermissions(permission, PERMISSION_CODE);
-        }
 
         //request a CameraProvider
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
