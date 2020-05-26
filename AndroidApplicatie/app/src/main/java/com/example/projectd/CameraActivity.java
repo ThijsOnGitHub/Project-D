@@ -1,8 +1,12 @@
 package com.example.projectd;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Parcelable;
 import android.util.Size;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +30,8 @@ import android.widget.Toast;
 
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -34,10 +40,22 @@ public class CameraActivity extends AppCompatActivity {
     //Qr code is aanwezig in de afbeelding
     private  boolean qrCodeDetected = false;
     //Qr code schaal
-    private double verhoudingsGetal;
+    private double ratio;
 
+    //Take image varible
+    private String[] poses;
+    private int poseIndex =0;
+    private ArrayList<ImageData> takenImagesArray;
+
+    //Data
     public QrCodeAnlyzer qrCodeAnlyzer= new QrCodeAnlyzer(this);
+
+
+    //Elements
     Button mMaakFotoBtn;
+    ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    ProcessCameraProvider cameraProvider;
+    TextView cameraFeedback;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,16 +65,30 @@ public class CameraActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_camera);
 
+        //Connect variables to views
         mMaakFotoBtn= findViewById(R.id.camera_maakFoto_btn);
+        cameraFeedback = findViewById(R.id.mTVcameraFeedback);
+
+        //Create list with positions to be photographed
+        poses = new String[]{"front","side"};
+
+        //Update the feeback
+        updateFeedback();
+
+        //Intiate takenImageMap
+        takenImagesArray = new ArrayList<ImageData>();
+
+
 
 
         //request a CameraProvider
-        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+        cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+
 
         //check for CameraProvider availability
         cameraProviderFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                cameraProvider = cameraProviderFuture.get();
                 bindPreview(this,cameraProvider);
             } catch (ExecutionException | InterruptedException e) {
                 // No errors need to be handled for this Future.
@@ -64,6 +96,12 @@ public class CameraActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(this));
+
+    }
+
+    void updateFeedback(){
+        //Set text of the feeback, so that the user knows what to take a picture of
+        cameraFeedback.setText("Neem een foto van je "+getText(getResources().getIdentifier(poses[poseIndex],"string",getPackageName())));
     }
 
     /*
@@ -77,10 +115,22 @@ public class CameraActivity extends AppCompatActivity {
     };
 
     //Vanuit de analyse kan de schaal worden aangepast
-    public void setVerhoudingsGetal(double verhoudingsGetal){
-        this.verhoudingsGetal = verhoudingsGetal;
-        mMaakFotoBtn.setText(Double.toString(verhoudingsGetal));
+    public void tookCorrectImage(double ratio,Uri ImageUri){
+        this.ratio = ratio;
+        takenImagesArray.add(new ImageData(poses[poseIndex],ImageUri,ratio));
+        poseIndex++;
+        if(poseIndex>=poses.length){
+            Intent nextIntent= new Intent(this,SetLines.class);
+            nextIntent.putParcelableArrayListExtra("data", takenImagesArray);
+            cameraProvider.unbindAll();
+            finish();
+            this.startActivity(nextIntent);
+        }else{
+            updateFeedback();
+        }
+
     }
+
 
 
     //Select a camera and bind the life cycle and use cases
@@ -148,6 +198,7 @@ public class CameraActivity extends AppCompatActivity {
 
         //De imageanalyse wordt hier gestart
         imageAnalysis.setAnalyzer(Executors.newFixedThreadPool(1), qrCodeAnlyzer);
+
 
         preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.getCameraInfo()));
 

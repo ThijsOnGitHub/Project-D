@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        tools:context=".SetLines" android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/mTVfeedback"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/mCLdragView">
+
+        <ImageView
+                android:id="@+id/mIVTakenImagePreview"
+                android:layout_width="0dp"
+                android:layout_height="0dp" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" android:background="#00E1FF"
+                app:srcCompat="@drawable/ic_imageph_rose_24dp"/>
+        <View
+                android:id="@+id/mVLine"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="#FF0000"
+                app:layout_constraintTop_toTopOf="@+id/mIVTakenImagePreview"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="24dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+            android:text="TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:textAlignment="center" android:id="@+id/mTVfeedback"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/mBSetLine"/>
+    <Button
+            android:text="setLine"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:id="@+id/mBSetLine" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mCLdragView" app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

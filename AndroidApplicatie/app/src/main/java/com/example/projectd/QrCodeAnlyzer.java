@@ -53,13 +53,13 @@ public class QrCodeAnlyzer implements ImageAnalysis.Analyzer {
         FirebaseVisionImage image;
         try {
             image = FirebaseVisionImage.fromFilePath(context, imageFile);
-            setVerhoudingsGetal(image);
+            setRatio(image,imageFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void setVerhoudingsGetal(FirebaseVisionImage image){
+    private void setRatio(FirebaseVisionImage image, Uri imageUri){
         getBarcodesTask(image)
             .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
             @Override
@@ -83,18 +83,18 @@ public class QrCodeAnlyzer implements ImageAnalysis.Analyzer {
                         Point point2 = corners[1];
 
                         //Berekend het aantal centimeters tussen de punten
-                        double aantalPixelsBreed = Math.sqrt(Math.pow(point2.x - point1.x, 2) - Math.pow(point2.y - point1.y, 2));
-                        Log.i("aantal pixels", Double.toString(aantalPixelsBreed));
+                        double pixelsWide = Math.sqrt(Math.pow(point2.x - point1.x, 2) - Math.pow(point2.y - point1.y, 2));
+                        Log.i("aantal pixels", Double.toString(pixelsWide));
 
                         //krijgt het aantal milimeters uit de qr-code
-                        String aantalMilimeter=rawValue.replace("TashiraApp ","");
-                        double aantalMilimetersBreed=Double.parseDouble(aantalMilimeter);
+                        String millimeters=rawValue.replace("TashiraApp ","");
+                        double mellimetersWide=Double.parseDouble(millimeters);
 
-                        Log.i("aantal milimeters",aantalMilimetersBreed+"");
+                        Log.i("aantal milimeters",mellimetersWide+"");
                         //Geeft een verhoudingsgetal
-                        double verhoudingsGetal= aantalMilimetersBreed/aantalPixelsBreed;
-                        Log.i("verhoudingsgetal",verhoudingsGetal+"");
-                        cameraActivity.setVerhoudingsGetal(verhoudingsGetal);
+                        double ratio= mellimetersWide/pixelsWide;
+                        Log.i("ratio",ratio+"");
+                        cameraActivity.tookCorrectImage(ratio,imageUri);
                     }
                 }
             }
