@@ -75,5 +75,5 @@ public class ImageData implements Parcelable {
     };
 }
 enum MeasurePoints {
-    waist,chest
+    waist,chest,hip
 }
