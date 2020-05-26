@@ -13,6 +13,11 @@ public class ImageData implements Parcelable {
     private String name;
     private Uri image;
     private double ratio;
+
+    public HashMap<MeasurePoints, Double> getMeasurePoints() {
+        return measurePoints;
+    }
+
     private HashMap<MeasurePoints,Double> measurePoints;
 
 

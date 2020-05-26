@@ -171,7 +171,7 @@ public class CameraActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 ContentValues contentValues = new ContentValues();
-                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis());
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis()+".jpeg");
                 contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
 
                 ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
