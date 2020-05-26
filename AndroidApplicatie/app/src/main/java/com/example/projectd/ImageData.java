@@ -13,18 +13,18 @@ public class ImageData implements Parcelable {
     private String name;
     private Uri image;
     private double ratio;
-    private HashMap<MeasurePoints,Double> poses;
+    private HashMap<MeasurePoints,Double> measurePoints;
 
 
     public ImageData(String name, Uri image, double ratio){
         this.name=name;
         this.image=image;
         this.ratio=ratio;
-        this.poses= new HashMap<MeasurePoints, Double>();
+        this.measurePoints = new HashMap<MeasurePoints, Double>();
     }
 
     public void setMeasurePoints(MeasurePoints pose, Double poseY) {
-        poses.put(pose,poseY);
+        measurePoints.put(pose,poseY);
     }
 
     public String getName() {
@@ -44,7 +44,7 @@ public class ImageData implements Parcelable {
         name = in.readString();
         image = in.readParcelable(Uri.class.getClassLoader());
         ratio = in.readDouble();
-        poses = (HashMap<MeasurePoints, Double>) in.readBundle().getSerializable("map");
+        measurePoints = (HashMap<MeasurePoints, Double>) in.readBundle().getSerializable("map");
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ImageData implements Parcelable {
         dest.writeParcelable(image, flags);
         dest.writeDouble(ratio);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("map", poses);
+        bundle.putSerializable("map", measurePoints);
         dest.writeBundle(bundle);
     }
 
