@@ -11,7 +11,8 @@ const bodyPix = require("@tensorflow-models/body-pix");
 // parameters:
 // frontImage : file
 // sideImage : file
-// scale : number
+// scaleFront : number (cm)
+// scaleSide : number (cm)
 // yLineChestFront : number
 // yLineChestSide : number
 // yLineWaistFront : number
@@ -33,7 +34,8 @@ app.get("/", (req, res, next) => {
 app.post("/measure", async(req, res, next) => {
     const frontImage = await jsConvertImageToImageElement(req.files.frontImage);
     const sideImage = await jsConvertImageToImageElement(req.files.sideImage);
-    const scale = req.body.scale;
+    const scaleFront = req.body.scaleFront;
+    const scaleSide = req.body.scaleSide;
     const yLineChestFront = req.body.yLineChestFront;
     const yLineChestSide = req.body.yLineChestSide;
     const yLineHipFront = req.body.yLineHipFront;
@@ -46,7 +48,8 @@ app.post("/measure", async(req, res, next) => {
         frontImageSegmentation : await jsGetSegmentation(frontImage),
         sideImage: sideImage,
         sideImageSegmentation : await jsGetSegmentation(sideImage),
-        scale : scale
+        scaleFront : scaleFront,
+        scaleSide : scaleSide,
     };
 
     const chestSize = await jsMeasureChest(imageInformation, yLineChestFront, yLineChestSide);
@@ -83,10 +86,10 @@ async function jsConvertImageToImageElement(image){
 //#region Chest
 
 async function jsMeasureChest(imageInformation, yLineChestFront, yLineChestSide){
-    const chestSizeFront = await jsCalculateLineLength(yLineChestFront, imageInformation.frontImageSegmentation);
-    const chestSizeSide = await jsCalculateLineLength(yLineChestSide, imageInformation.sideImageSegmentation);
+    const chestSizeFront = await jsCalculateLineLength(yLineChestFront, imageInformation.frontImageSegmentation, imageInformation.scaleFront);
+    const chestSizeSide = await jsCalculateLineLength(yLineChestSide, imageInformation.sideImageSegmentation, imageInformation.scaleSide);
 
-    return await jsCalculatePerimeter(chestSizeFront, chestSizeSide, imageInformation.scale);
+    return await jsCalculatePerimeter(chestSizeFront, chestSizeSide);
 }
 
 //#endregion
@@ -94,10 +97,10 @@ async function jsMeasureChest(imageInformation, yLineChestFront, yLineChestSide)
 //#region Hip
 
 async function jsMeasureHip(imageInformation, yLineHipFront, yLineHipSide){
-    const hipSizeFront = await jsCalculateLineLength(yLineHipFront, imageInformation.frontImageSegmentation);
-    const hipSizeSide = await jsCalculateLineLength(yLineHipSide, imageInformation.sideImageSegmentation);
+    const hipSizeFront = await jsCalculateLineLength(yLineHipFront, imageInformation.frontImageSegmentation, imageInformation.scaleFront);
+    const hipSizeSide = await jsCalculateLineLength(yLineHipSide, imageInformation.sideImageSegmentation, imageInformation.scaleSide);
 
-    return await jsCalculatePerimeter(hipSizeFront, hipSizeSide, imageInformation.scale);
+    return await jsCalculatePerimeter(hipSizeFront, hipSizeSide);
 }
 
 //#endregion
@@ -105,15 +108,15 @@ async function jsMeasureHip(imageInformation, yLineHipFront, yLineHipSide){
 //#region Waist
 
 async function jsMeasureWaist(imageInformation, yLineWaistFront, yLineWaistSide){
-    const waistSizeFront = await jsCalculateLineLength(yLineWaistFront, imageInformation.frontImageSegmentation);
-    const waistSizeSide = await jsCalculateLineLength(yLineWaistSide, imageInformation.sideImageSegmentation);
+    const waistSizeFront = await jsCalculateLineLength(yLineWaistFront, imageInformation.frontImageSegmentation, imageInformation.scaleFront);
+    const waistSizeSide = await jsCalculateLineLength(yLineWaistSide, imageInformation.sideImageSegmentation, imageInformation.scaleSide);
 
-    return await jsCalculatePerimeter(waistSizeFront, waistSizeSide, imageInformation.scale);
+    return await jsCalculatePerimeter(waistSizeFront, waistSizeSide);
 }
 
 //#endregion
 
-async function jsCalculateLineLength(yLine, segmentation){
+async function jsCalculateLineLength(yLine, segmentation, scale){
     var startPoint = segmentation.width * yLine;
     var endPoint = startPoint + segmentation.width;
     var outlinePixelNumber = [];
@@ -135,15 +138,15 @@ async function jsCalculateLineLength(yLine, segmentation){
 
     outlinePixelNumber.sort((a,b) => b - a);
 
-    return outlinePixelNumber[0] - outlinePixelNumber[outlinePixelNumber.length-1];
+    var lengthInPixels = outlinePixelNumber[0] - outlinePixelNumber[outlinePixelNumber.length-1];
+
+    return lengthInPixels * scale;
 }
 
-async function jsCalculatePerimeter(width, depth, scale){
+async function jsCalculatePerimeter(width, depth){
     var a = width / 2;
     var b = depth / 2;
 
     //p≈ π(3(a+b)- √((3a+b)(a+3b)))
-    var perimeter = Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)));
-    
-    return  perimeter * scale;
+    return Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)));
 }
