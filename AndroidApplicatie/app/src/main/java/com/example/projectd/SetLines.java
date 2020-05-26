@@ -129,7 +129,9 @@ public class SetLines extends AppCompatActivity {
 
     public double getImageHeight(Uri image) throws IOException {
          Bitmap bitmap= MediaStore.Images.Media.getBitmap(getContentResolver(),image);
-         return bitmap.getHeight();
+         double height=bitmap.getHeight();
+         Log.i("height",Double.toString(height));
+         return height;
     }
 
     public void setLinePostion(int yPosition){
@@ -147,7 +149,9 @@ public class SetLines extends AppCompatActivity {
         int topMargin=marginLayoutParams.topMargin;
         int beamHeight =getBeamHeight();
         int imageHeight= getRescaledImageHeigth(imageView).getHeight();
-        return ((double) topMargin-beamHeight)/imageHeight;
+        double percentage=((double) topMargin-beamHeight)/imageHeight;
+        Log.i("percentage",Double.toString(percentage));
+        return percentage;
     }
 
     public double getYposition() throws IOException {
