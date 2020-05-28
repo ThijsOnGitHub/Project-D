@@ -65,6 +65,7 @@ public class sendData extends AppCompatActivity {
         Log.i("json",json);
         dataView.setText(json+" Sending Data");
 
+
         //Get the uri's of the images
         Uri frontImageUri =takenImagesArray.get(0).getImage();
         Uri sideImageUri  = takenImagesArray.get(1).getImage();
@@ -87,7 +88,7 @@ public class sendData extends AppCompatActivity {
                 .build();
 
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://project-d-server.azurewebsites.net/")
+                .baseUrl("https://projectd.martijnnieuwenhuis.nl/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient);
 
@@ -119,7 +120,6 @@ public class sendData extends AppCompatActivity {
                 throwable.printStackTrace();
             }
         });
-
     }
 
     public String firstLetterToUppercase(String string){
