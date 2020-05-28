@@ -67,6 +67,24 @@
 
 
     <TextView
+        android:id="@+id/text2.2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Om via een computer te printen, sla dit bestand op"
+        android:textColor="@color/HeaderText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text2.3"/>
+    <TextView
+        android:id="@+id/text2.3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="De pdf is dan te vinden in Files > Downloads"
+        android:textColor="@color/HeaderText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text3"/>
+    <TextView
         android:id="@+id/text3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
