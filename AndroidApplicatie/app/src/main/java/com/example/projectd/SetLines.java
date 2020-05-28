@@ -154,8 +154,8 @@ public class SetLines extends AppCompatActivity {
         return percentage;
     }
 
-    public double getYposition() throws IOException {
-        return getImageHeight(getCurrentImage().getImage())*getLinePercentage();
+    public int getYposition() throws IOException {
+        return (int) Math.round(getImageHeight(getCurrentImage().getImage())*getLinePercentage());
 }
 
     public int getBeamHeight(){

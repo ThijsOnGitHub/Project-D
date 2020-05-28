@@ -88,27 +88,32 @@ public class sendData extends AppCompatActivity {
                 .build();
 
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://projectd.martijnnieuwenhuis.nl/api/")
+                .baseUrl("http://projectd.martijnnieuwenhuis.nl/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient);
 
         Retrofit retrofit = builder.build();
 
         //Creates all the parameters for the api
-        Map<String,Double> parameters =new HashMap<String, Double>();
+        Map<String,Double> scales = new HashMap<>();
+        Map<String,Integer> yLijnen =new HashMap<String, Integer>();
         MeasurePoints[] measurePoints = MeasurePoints.values();
 
         for (ImageData imageData : takenImagesArray) {
-            parameters.put("scale" + firstLetterToUppercase(imageData.getName()), imageData.getRatio());
-            Map<MeasurePoints, Double> measurePointsMap = imageData.getMeasurePoints();
+            scales.put("scale" + firstLetterToUppercase(imageData.getName()), imageData.getRatio());
+            Map<MeasurePoints, Integer> measurePointsMap = imageData.getMeasurePoints();
             for (MeasurePoints measurePoint : measurePoints) {
-                String name = "yLijn" + firstLetterToUppercase(measurePoint.toString()) + firstLetterToUppercase(imageData.getName());
-                parameters.put(name, measurePointsMap.get(measurePoint));
+                String name = "yLine" + firstLetterToUppercase(measurePoint.toString()) + firstLetterToUppercase(imageData.getName());
+                yLijnen.put(name, measurePointsMap.get(measurePoint));
             }
         }
 
         retrofitConnetctions = retrofit.create(RetrofitConnetctions.class);
-        Call<MeasureResult>  call = retrofitConnetctions.measureResult(parameters,frontImage,sideImage);
+
+
+
+
+        Call<MeasureResult>  call = retrofitConnetctions.measureResult(scales,yLijnen,frontImage,sideImage);
         call.enqueue(new Callback<MeasureResult>() {
             @Override
             public void onResponse(Call<MeasureResult> call, Response<MeasureResult> response) {
