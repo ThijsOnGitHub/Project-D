@@ -10,7 +10,7 @@ public interface RetrofitConnetctions {
     @Multipart
     @POST("measure")
     Call<MeasureResult> measureResult(
-            @QueryMap Map<String, Double> parameters,
+            @PartMap Map<String, Double> parameters,
             @Part MultipartBody.Part frontImage,
             @Part MultipartBody.Part sideImage
     );

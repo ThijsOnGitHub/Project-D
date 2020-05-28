@@ -82,12 +82,12 @@ public class sendData extends AppCompatActivity {
         MultipartBody.Part sideImage = MultipartBody.Part.createFormData("sideImage",sideImageFile.getName(),requestBodySide);
 
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(3000, TimeUnit.SECONDS)
-                .connectTimeout(300, TimeUnit.SECONDS)
+                .readTimeout(5000, TimeUnit.SECONDS)
+                .connectTimeout(5000, TimeUnit.SECONDS)
                 .build();
 
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://localhost:3000/")
+                .baseUrl("https://project-d-server.azurewebsites.net/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient);
 
@@ -97,13 +97,12 @@ public class sendData extends AppCompatActivity {
         Map<String,Double> parameters =new HashMap<String, Double>();
         MeasurePoints[] measurePoints = MeasurePoints.values();
 
-        for(int i = 0; i<takenImagesArray.size();i++){
-            ImageData imageData= takenImagesArray.get(i);
-            parameters.put("scale"+firstLetterToUppercase(imageData.getName()),imageData.getRatio());
+        for (ImageData imageData : takenImagesArray) {
+            parameters.put("scale" + firstLetterToUppercase(imageData.getName()), imageData.getRatio());
             Map<MeasurePoints, Double> measurePointsMap = imageData.getMeasurePoints();
-            for(int j=0;j<measurePoints.length;j++){
-                String name="yLijn"+firstLetterToUppercase(measurePoints[j].toString())+firstLetterToUppercase(imageData.getName());
-                parameters.put(name,measurePointsMap.get(measurePoints[j]));
+            for (MeasurePoints measurePoint : measurePoints) {
+                String name = "yLijn" + firstLetterToUppercase(measurePoint.toString()) + firstLetterToUppercase(imageData.getName());
+                parameters.put(name, measurePointsMap.get(measurePoint));
             }
         }
 
@@ -112,7 +111,7 @@ public class sendData extends AppCompatActivity {
         call.enqueue(new Callback<MeasureResult>() {
             @Override
             public void onResponse(Call<MeasureResult> call, Response<MeasureResult> response) {
-                dataView.setText(response.toString());
+                dataView.setText(response.body().getString());
             }
 
             @Override
