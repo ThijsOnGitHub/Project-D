@@ -33,8 +33,17 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class CameraActivity extends AppCompatActivity {
     //Qr code is aanwezig in de afbeelding
@@ -50,6 +59,8 @@ public class CameraActivity extends AppCompatActivity {
     //Data
     public QrCodeAnlyzer qrCodeAnlyzer= new QrCodeAnlyzer(this);
 
+    //Timer stuff
+    private static int count = 0;
 
     //Elements
     Button mMaakFotoBtn;
@@ -78,12 +89,8 @@ public class CameraActivity extends AppCompatActivity {
         //Intiate takenImageMap
         takenImagesArray = new ArrayList<ImageData>();
 
-
-
-
         //request a CameraProvider
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
-
 
         //check for CameraProvider availability
         cameraProviderFuture.addListener(() -> {
@@ -169,9 +176,8 @@ public class CameraActivity extends AppCompatActivity {
         mMaakFotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 ContentValues contentValues = new ContentValues();
-                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis()+".jpeg");
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis() + ".jpeg");
                 contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
 
                 ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
@@ -179,21 +185,39 @@ public class CameraActivity extends AppCompatActivity {
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         contentValues).build();
 
-                imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(context),
-                        new ImageCapture.OnImageSavedCallback() {
-                            @Override
-                            public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                                String msg = "Pic captured at " + getFilesDir().toString();
-                                Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
-                                qrCodeAnlyzer.ScanQRcodeFile(context,outputFileResults.getSavedUri());
-                            }
-                            @Override
-                            public void onError(ImageCaptureException error) {
-                                String msg = "Something went wrong";
-                                Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
-                            }
-                        });
-            }
+/*                ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+                ScheduledFuture<?> scheduledFuture = ses.scheduleAtFixedRate(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                }, 0, 1, SECONDS);*/
+                    if (count < SettingsActivity.timer) {
+                        count++;
+                        //TODO insert text to speech
+                        String msg = String.valueOf(SettingsActivity.timer - count);
+                        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(context),
+                                new ImageCapture.OnImageSavedCallback() {
+                                    @Override
+                                    public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
+                                        String msg = "Pic captured at " + getFilesDir().toString();
+                                        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+                                        qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
+                                    }
+
+                                    @Override
+                                    public void onError(ImageCaptureException error) {
+                                        String msg = "Something went wrong";
+                                        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                        count = 0;
+                        //ses.shutdown();
+                    }
+                }
+
         });
 
         //De imageanalyse wordt hier gestart
@@ -203,6 +227,8 @@ public class CameraActivity extends AppCompatActivity {
         preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.getCameraInfo()));
 
     }
+private void photo(){
 
+}
 
 }
