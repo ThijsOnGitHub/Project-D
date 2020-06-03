@@ -65,6 +65,8 @@ public class CameraActivity extends AppCompatActivity {
 
     //Timer stuff
     long timercount = SettingsActivity.timer * 1000;
+    //What camera chosen
+    private int chosencamera;
 
     //Elements
     Button mMaakFotoBtn;
@@ -107,6 +109,14 @@ public class CameraActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(this));
+
+        //Camera choice
+        if(SettingsActivity.frontcamerachosen){
+            int chosencamera = CameraSelector.LENS_FACING_FRONT;
+        }
+        else{
+            int chosencamera = CameraSelector.LENS_FACING_BACK;
+        }
     }
 
     void updateFeedback() {
@@ -151,10 +161,10 @@ public class CameraActivity extends AppCompatActivity {
         Preview preview = new Preview.Builder()
                 .build();
 
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
 
+        CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(chosencamera)
+                .build();
 
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder()

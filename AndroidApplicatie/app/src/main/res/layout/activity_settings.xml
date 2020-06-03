@@ -54,7 +54,7 @@
         android:textColor="@color/Text"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="@+id/text"
-        app:layout_constraintTop_toBottomOf="@+id/switch1" />
+        app:layout_constraintTop_toBottomOf="@+id/camerachoice" />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/entertext"
         android:layout_width="60dp"
@@ -73,13 +73,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Switch
-        android:id="@+id/switch1"
-        android:layout_width="260dp"
+        android:id="@+id/camerachoice"
+        android:layout_width="250dp"
         android:layout_height="25dp"
         android:drawableStart="@drawable/cameraicon"
         android:text="Gebruik selfie camera"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/Text"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/text2"
         app:layout_constraintTop_toBottomOf="@+id/text" />
 

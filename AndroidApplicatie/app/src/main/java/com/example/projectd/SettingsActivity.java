@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.Button;
+import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,9 +15,11 @@ import com.google.android.material.textfield.TextInputEditText;
 public class SettingsActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
     public static int timer;
+    public static boolean frontcamerachosen;
     Button BackButton;
     Button ForwardButton;
     TextInputEditText mTimerSecinpt;
+    Switch mCameraSwtch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_settings);
         //TODO set the settings
         mTimerSecinpt = findViewById(R.id.timer);
+        mCameraSwtch = findViewById(R.id.camerachoice);
 
         Intent camera = new Intent(SettingsActivity.this, CameraActivity.class);
         ForwardButton = findViewById(R.id.forward);
@@ -34,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
                 requestPermissions(permission, PERMISSION_CODE);
             }
             else{
-                //timersec = Integer.parseInt(mTimerSecinpt.getText().toString());
+                frontcamerachosen = mCameraSwtch.getShowText();
                 timer = Integer.parseInt(mTimerSecinpt.getText().toString());
                 startActivity(camera);
             }
