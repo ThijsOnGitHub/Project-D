@@ -87,7 +87,7 @@ public class CameraActivity extends AppCompatActivity {
         //Create list with positions to be photographed
         poses = new String[]{"front", "side"};
 
-        //Update the feeback
+        //Update the feedback
         updateFeedback();
 
         //Intiate takenImageMap
@@ -110,8 +110,8 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     void updateFeedback() {
-        //Set text of the feeback, so that the user knows what to take a picture of
-        cameraFeedback.setText("Neem een foto van je " + getText(getResources().getIdentifier(poses[poseIndex], "string", getPackageName())));
+        String msg = "Neem een foto van je " + getText(getResources().getIdentifier(poses[poseIndex], "string", getPackageName()));
+        cameraFeedback.setText(msg);
     }
 
     /*
@@ -148,7 +148,6 @@ public class CameraActivity extends AppCompatActivity {
     void bindPreview(Context context, @NonNull ProcessCameraProvider cameraProvider) {
         PreviewView previewView = findViewById(R.id.preview_view);
 
-
         Preview preview = new Preview.Builder()
                 .build();
 
@@ -167,53 +166,51 @@ public class CameraActivity extends AppCompatActivity {
                 new ImageCapture.Builder()
                         .build();
 
-        //Text to Speech initialization
-        TextToSpeech tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-            }
-        });
-        //No Dutch language available atm
-        tts.setLanguage(Locale.ENGLISH);
-
         Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis, preview, imageCapture);
 
         //De filename van de foto wordt hier ingesteld
 
+
+
+        //Text to Speech initialization
+        TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
+        tts.setLanguage(new Locale("nl","NL"));
         mMaakFotoBtn.setOnClickListener(v -> new CountDownTimer(timercount, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                //TODO insert text to speech
                 String msg = String.valueOf(millisUntilFinished / 1000 + 1);
                 tts.speak(msg, TextToSpeech.QUEUE_ADD,null,"1");
             }
 
             @Override
             public void onFinish() {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis() + ".jpeg");
-                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+                if (mMaakFotoBtn.getVisibility() == View.VISIBLE){
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis() + ".jpeg");
+                    contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
 
-                ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
-                        getContentResolver(),
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        contentValues).build();
-                imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(context),
-                        new ImageCapture.OnImageSavedCallback() {
-                            @Override
-                            public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                                String msg = "Pic captured at " + getFilesDir().toString();
-                                Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
-                                qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
-                                tts.speak("Photo", TextToSpeech.QUEUE_ADD,null,"2");
-                            }
-                            @Override
-                            public void onError(ImageCaptureException error) {
-                                String msg = "Something went wrong";
-                                Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
-                                tts.speak("Try Again", TextToSpeech.QUEUE_ADD,null,"3");
-                            }
-                        });
+                    ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
+                            getContentResolver(),
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            contentValues).build();
+                    imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(context),
+                            new ImageCapture.OnImageSavedCallback() {
+                                @Override
+                                public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
+                                    String msg = "Pic captured at " + getFilesDir().toString();
+                                    Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+                                    qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
+                                    tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
+                                }
+                                @Override
+                                public void onError(ImageCaptureException error) {
+                                    tts.speak("Probeer opnieuw", TextToSpeech.QUEUE_ADD,null,"1");
+                                }
+                            });
+                }
+                else{
+                    tts.speak("Probeer opnieuw", TextToSpeech.QUEUE_ADD,null,"1");
+                }
             }
         }.start());
 
