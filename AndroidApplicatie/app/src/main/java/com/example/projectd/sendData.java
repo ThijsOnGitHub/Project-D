@@ -1,6 +1,7 @@
 package com.example.projectd;
 
 import android.appwidget.AppWidgetManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -125,6 +126,10 @@ public class sendData extends AppCompatActivity {
                 throwable.printStackTrace();
             }
         });
+
+        ContentResolver contentResolver = this.getContentResolver();
+        contentResolver.delete(frontImageUri,null,null);
+        contentResolver.delete(sideImageUri,null,null);
     }
 
     public String firstLetterToUppercase(String string){

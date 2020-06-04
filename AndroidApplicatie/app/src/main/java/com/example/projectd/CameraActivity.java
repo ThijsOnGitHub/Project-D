@@ -1,6 +1,7 @@
 package com.example.projectd;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -183,7 +184,7 @@ public class CameraActivity extends AppCompatActivity {
         //De filename van de foto wordt hier ingesteld
 
 
-
+        
         //Text to Speech initialization
         TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
         tts.setLanguage(new Locale("nl","NL"));
@@ -197,9 +198,9 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 if (mMaakFotoBtn.getVisibility() == View.VISIBLE){
-                    String photo = System.currentTimeMillis() + ".jpeg";
+                    String photoname = System.currentTimeMillis() + ".jpeg";
                     ContentValues contentValues = new ContentValues();
-                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, photo);
+                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, photoname);
                     contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
 
                     ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
@@ -210,12 +211,11 @@ public class CameraActivity extends AppCompatActivity {
                             new ImageCapture.OnImageSavedCallback() {
                                 @Override
                                 public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                                    //Images saved at /storage/emulated/0/Pictures/___.jpg
+                                    tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
+                                    //Images saved at /storage/emulated/0/Pictures/[current time in ms].jpeg
+                                    qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
                                     String msg = "Pic captured at " + getFilesDir().toString();
                                     Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
-                                    qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
-                                    
-                                    tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
                                 }
                                 @Override
                                 public void onError(ImageCaptureException error) {
