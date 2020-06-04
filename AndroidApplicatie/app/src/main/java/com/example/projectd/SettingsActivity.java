@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.widget.Button;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
                 requestPermissions(permission, PERMISSION_CODE);
             }
             else{
-                frontcamerachosen = mCameraSwtch.getShowText();
+                frontcamerachosen = mCameraSwtch.isChecked();
                 timer = Integer.parseInt(mTimerSecinpt.getText().toString());
                 startActivity(camera);
             }
