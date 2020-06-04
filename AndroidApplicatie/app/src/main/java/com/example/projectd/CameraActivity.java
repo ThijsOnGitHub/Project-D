@@ -33,6 +33,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -195,8 +196,9 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 if (mMaakFotoBtn.getVisibility() == View.VISIBLE){
+                    String photo = System.currentTimeMillis() + ".jpeg";
                     ContentValues contentValues = new ContentValues();
-                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis() + ".jpeg");
+                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, photo);
                     contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
 
                     ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
@@ -207,9 +209,11 @@ public class CameraActivity extends AppCompatActivity {
                             new ImageCapture.OnImageSavedCallback() {
                                 @Override
                                 public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
+                                    //Images saved at /storage/emulated/0/Pictures/___.jpg
                                     String msg = "Pic captured at " + getFilesDir().toString();
                                     Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
                                     qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
+                                    
                                     tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
                                 }
                                 @Override
