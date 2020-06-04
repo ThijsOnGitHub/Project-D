@@ -111,13 +111,6 @@ public class CameraActivity extends AppCompatActivity {
             }
         }, ContextCompat.getMainExecutor(this));
 
-        //Camera choice
-        if(SettingsActivity.frontcamerachosen){
-            int chosencamera = CameraSelector.LENS_FACING_FRONT;
-        }
-        else{
-            int chosencamera = CameraSelector.LENS_FACING_BACK;
-        }
     }
 
     void updateFeedback() {
@@ -162,6 +155,14 @@ public class CameraActivity extends AppCompatActivity {
         Preview preview = new Preview.Builder()
                 .build();
 
+
+        //Camera choice
+        if(SettingsActivity.frontcamerachosen){
+            chosencamera = CameraSelector.LENS_FACING_FRONT;
+        }
+        else{
+            chosencamera = CameraSelector.LENS_FACING_BACK;
+        }
 
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(chosencamera)
