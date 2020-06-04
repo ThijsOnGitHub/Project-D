@@ -90,8 +90,8 @@ public class sendData extends AppCompatActivity {
 
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("http://projectd.martijnnieuwenhuis.nl/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient);
+                .addConverterFactory(GsonConverterFactory.create());
+                //.client(okHttpClient);
 
         Retrofit retrofit = builder.build();
 
@@ -127,6 +127,7 @@ public class sendData extends AppCompatActivity {
             }
         });
 
+        //TODO check if this works
         ContentResolver contentResolver = this.getContentResolver();
         contentResolver.delete(frontImageUri,null,null);
         contentResolver.delete(sideImageUri,null,null);
