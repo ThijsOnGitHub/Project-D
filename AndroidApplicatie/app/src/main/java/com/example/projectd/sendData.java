@@ -85,13 +85,14 @@ public class sendData extends AppCompatActivity {
 
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(5000, TimeUnit.SECONDS)
+                .writeTimeout(5000,TimeUnit.MINUTES)
                 .connectTimeout(5000, TimeUnit.SECONDS)
                 .build();
 
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("http://projectd.martijnnieuwenhuis.nl/api/")
-                .addConverterFactory(GsonConverterFactory.create());
-                //.client(okHttpClient);
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient);
 
         Retrofit retrofit = builder.build();
 
@@ -128,9 +129,9 @@ public class sendData extends AppCompatActivity {
         });
 
         //TODO check if this works
-        ContentResolver contentResolver = this.getContentResolver();
-        contentResolver.delete(frontImageUri,null,null);
-        contentResolver.delete(sideImageUri,null,null);
+        //ContentResolver contentResolver = this.getContentResolver();
+        //contentResolver.delete(frontImageUri,null,null);
+        //contentResolver.delete(sideImageUri,null,null);
     }
 
     public String firstLetterToUppercase(String string){
