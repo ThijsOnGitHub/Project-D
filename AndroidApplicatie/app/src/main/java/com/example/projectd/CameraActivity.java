@@ -76,6 +76,7 @@ public class CameraActivity extends AppCompatActivity {
     ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     ProcessCameraProvider cameraProvider;
     TextView cameraFeedback;
+    TextView mQRdetectedText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class CameraActivity extends AppCompatActivity {
 
         //Connect variables to views
         mMaakFotoBtn = findViewById(R.id.camera_maakFoto_btn);
+        mQRdetectedText = findViewById(R.id.QRdetected);
         cameraFeedback = findViewById(R.id.mTVcameraFeedback);
 
         //Create list with positions to be photographed
@@ -126,7 +128,7 @@ public class CameraActivity extends AppCompatActivity {
      */
     public void changeBarcodeDetection(List<FirebaseVisionBarcode> barcodes) {
         boolean status = barcodes.size() != 0;
-        mMaakFotoBtn.setVisibility(status ? View.VISIBLE : View.INVISIBLE);
+        mQRdetectedText.setVisibility(status ? View.VISIBLE : View.INVISIBLE);
         qrCodeDetected = status;
     }
 
@@ -198,7 +200,7 @@ public class CameraActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                if (mMaakFotoBtn.getVisibility() == View.VISIBLE){
+                if (mQRdetectedText.getVisibility() == View.VISIBLE){
                     String photoname = System.currentTimeMillis() + ".jpeg";
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, photoname);
@@ -213,10 +215,10 @@ public class CameraActivity extends AppCompatActivity {
                                 @Override
                                 public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
                                     tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
-                                    //Images saved at /storage/emulated/0/Pictures/[current time in ms].jpeg
                                     qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
-                                    String msg = "Pic captured at " + getFilesDir().toString();
-                                    Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+                                    if(poseIndex == 0){
+                                        tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
+                                    }
                                 }
                                 @Override
                                 public void onError(ImageCaptureException error) {
@@ -225,7 +227,7 @@ public class CameraActivity extends AppCompatActivity {
                             });
                 }
                 else{
-                    tts.speak("Probeer opnieuw", TextToSpeech.QUEUE_ADD,null,"1");
+                    tts.speak("QR Code niet gedetecteerd", TextToSpeech.QUEUE_ADD,null,"1");
                 }
             }
         }.start());
