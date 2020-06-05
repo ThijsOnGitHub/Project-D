@@ -44,11 +44,12 @@ public class CameraActivity extends AppCompatActivity {
 
     //Take image varible
     private String[] poses;
-    private int poseIndex =0;
+    private int poseIndex=0;
     private ArrayList<ImageData> takenImagesArray;
 
     //Data
     public QrCodeAnlyzer qrCodeAnlyzer= new QrCodeAnlyzer(this);
+
 
 
     //Elements
@@ -76,9 +77,33 @@ public class CameraActivity extends AppCompatActivity {
         updateFeedback();
 
         //Intiate takenImageMap
-        takenImagesArray = new ArrayList<ImageData>();
+        takenImagesArray = new ArrayList<>();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startCamera();
+    }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        poseIndex=poses.length-1;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(poseIndex==0){
+            super.onBackPressed();
+        }else{
+            poseIndex--;
+            updateFeedback();
+        }
+
+    }
+
+    void startCamera(){
 
 
         //request a CameraProvider
@@ -99,6 +124,11 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
+
+
+
+
+
     void updateFeedback(){
         //Set text of the feeback, so that the user knows what to take a picture of
         cameraFeedback.setText("Neem een foto van je "+getText(getResources().getIdentifier(poses[poseIndex],"string",getPackageName())));
@@ -117,20 +147,26 @@ public class CameraActivity extends AppCompatActivity {
     //Vanuit de analyse kan de schaal worden aangepast
     public void tookCorrectImage(double ratio,Uri ImageUri){
         this.ratio = ratio;
-        takenImagesArray.add(new ImageData(poses[poseIndex],ImageUri,ratio));
+        ImageData data =new ImageData(poses[poseIndex],ImageUri,ratio);
+
+        //overrides if it don't exists
+        if(poseIndex<takenImagesArray.size()){
+            takenImagesArray.set(poseIndex,data);
+        }else{
+            takenImagesArray.add(data);
+        }
         poseIndex++;
-        if(poseIndex>=poses.length){
+        //checks if all the poses are done
+        if(poseIndex>poses.length-1){
             Intent nextIntent= new Intent(this,SetLines.class);
-            nextIntent.putParcelableArrayListExtra("data", takenImagesArray);
+            nextIntent.putExtra("data", takenImagesArray);
             cameraProvider.unbindAll();
-            finish();
             this.startActivity(nextIntent);
         }else{
             updateFeedback();
         }
 
     }
-
 
 
     //Select a camera and bind the life cycle and use cases
