@@ -66,6 +66,8 @@ public class sendData extends AppCompatActivity {
         Log.i("json",json);
         dataView.setText(json+" Sending Data");
 
+        //Contentresolver to delete pictures after use
+        ContentResolver contentResolver = this.getContentResolver();
 
         //Get the uri's of the images
         Uri frontImageUri =takenImagesArray.get(0).getImage();
@@ -120,6 +122,10 @@ public class sendData extends AppCompatActivity {
             @Override
             public void onResponse(Call<MeasureResult> call, Response<MeasureResult> response) {
                 dataView.setText(response.body().getString());
+
+                //TODO check if this works
+                contentResolver.delete(frontImageUri,null,null);
+                contentResolver.delete(sideImageUri,null,null);
             }
 
             @Override
@@ -128,10 +134,6 @@ public class sendData extends AppCompatActivity {
             }
         });
 
-        //TODO check if this works
-        //ContentResolver contentResolver = this.getContentResolver();
-        //contentResolver.delete(frontImageUri,null,null);
-        //contentResolver.delete(sideImageUri,null,null);
     }
 
     public String firstLetterToUppercase(String string){
