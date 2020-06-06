@@ -13,6 +13,7 @@ import android.util.Size;
 import android.content.ContentValues;
 import android.content.Context;
 import android.provider.MediaStore;
+import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
 import android.view.Window;
@@ -181,6 +182,30 @@ public class CameraActivity extends AppCompatActivity {
         ImageCapture imageCapture =
                 new ImageCapture.Builder()
                         .build();
+
+        OrientationEventListener orientationEventListener = new OrientationEventListener(this) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                int rotation;
+
+                // Monitors orientation values to determine the target rotation value
+                if (orientation >= 45 && orientation < 135) {
+                    rotation = Surface.ROTATION_270;
+                } else if (orientation >= 135 && orientation < 225) {
+                    rotation = Surface.ROTATION_180;
+                } else if (orientation >= 225 && orientation < 315) {
+                    rotation = Surface.ROTATION_90;
+                } else {
+                    rotation = Surface.ROTATION_0;
+                }
+
+                imageCapture.setTargetRotation(rotation);
+                imageAnalysis.setTargetRotation(rotation);
+            }
+        };
+
+        orientationEventListener.enable();
+
 
         Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis, preview, imageCapture);
 
