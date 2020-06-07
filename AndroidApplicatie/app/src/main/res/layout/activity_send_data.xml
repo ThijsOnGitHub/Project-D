@@ -7,11 +7,51 @@
         android:layout_height="match_parent"
         tools:context=".sendData">
 
+    <!--Tashira logo-->
+    <ImageView
+        android:id="@+id/Logo"
+        android:layout_width="308dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="Tashira"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logotashira" />
+
     <TextView
-            android:text="TextView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:id="@+id/mTVDatePreview" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:textAlignment="center"/>
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Data aan het versturen"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/HeaderText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Logo" />
+    <TextView
+        android:id="@+id/mTVDatePreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[insert data here]"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/footer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+    <TextView
+        android:id="@+id/footer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Wacht maximaal 5 minuten"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/HeaderText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

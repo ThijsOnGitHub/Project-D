@@ -1,6 +1,7 @@
 package com.example.projectd;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,6 +13,8 @@ import android.util.Size;
 import android.content.ContentValues;
 import android.content.Context;
 import android.provider.MediaStore;
+import android.view.OrientationEventListener;
+import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,6 +36,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +78,7 @@ public class CameraActivity extends AppCompatActivity {
     ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     ProcessCameraProvider cameraProvider;
     TextView cameraFeedback;
+    TextView mQRdetectedText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +90,7 @@ public class CameraActivity extends AppCompatActivity {
 
         //Connect variables to views
         mMaakFotoBtn = findViewById(R.id.camera_maakFoto_btn);
+        mQRdetectedText = findViewById(R.id.QRdetected);
         cameraFeedback = findViewById(R.id.mTVcameraFeedback);
 
         //Create list with positions to be photographed
@@ -150,7 +156,7 @@ public class CameraActivity extends AppCompatActivity {
      */
     public void changeBarcodeDetection(List<FirebaseVisionBarcode> barcodes) {
         boolean status = barcodes.size() != 0;
-        mMaakFotoBtn.setVisibility(status ? View.VISIBLE : View.INVISIBLE);
+        mQRdetectedText.setVisibility(status ? View.VISIBLE : View.INVISIBLE);
         qrCodeDetected = status;
     }
 
@@ -211,12 +217,34 @@ public class CameraActivity extends AppCompatActivity {
                 new ImageCapture.Builder()
                         .build();
 
+        OrientationEventListener orientationEventListener = new OrientationEventListener(this) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                int rotation;
+                // Monitors orientation values to determine the target rotation value
+                if (orientation >= 45 && orientation < 135) {
+                    rotation = Surface.ROTATION_270;
+                } else if (orientation >= 135 && orientation < 225) {
+                    rotation = Surface.ROTATION_180;
+                } else if (orientation >= 225 && orientation < 315) {
+                    rotation = Surface.ROTATION_90;
+                } else {
+                    rotation = Surface.ROTATION_0;
+                }
+                imageCapture.setTargetRotation(rotation);
+                imageAnalysis.setTargetRotation(rotation);
+            }
+        };
+
+        orientationEventListener.enable();
+
+
         Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis, preview, imageCapture);
 
         //De filename van de foto wordt hier ingesteld
 
 
-
+        
         //Text to Speech initialization
         TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
         tts.setLanguage(new Locale("nl","NL"));
@@ -229,9 +257,10 @@ public class CameraActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                if (mMaakFotoBtn.getVisibility() == View.VISIBLE){
+                if (mQRdetectedText.getVisibility() == View.VISIBLE){
+                    String photoname = System.currentTimeMillis() + ".jpeg";
                     ContentValues contentValues = new ContentValues();
-                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis() + ".jpeg");
+                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, photoname);
                     contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
 
                     ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
@@ -242,10 +271,11 @@ public class CameraActivity extends AppCompatActivity {
                             new ImageCapture.OnImageSavedCallback() {
                                 @Override
                                 public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                                    String msg = "Pic captured at " + getFilesDir().toString();
-                                    Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
-                                    qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
                                     tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
+                                    qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
+                                    if(poseIndex == 0){
+                                        tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
+                                    }
                                 }
                                 @Override
                                 public void onError(ImageCaptureException error) {
@@ -254,7 +284,7 @@ public class CameraActivity extends AppCompatActivity {
                             });
                 }
                 else{
-                    tts.speak("Probeer opnieuw", TextToSpeech.QUEUE_ADD,null,"1");
+                    tts.speak("QR Code niet gedetecteerd", TextToSpeech.QUEUE_ADD,null,"1");
                 }
             }
         }.start());

@@ -1,6 +1,7 @@
 package com.example.projectd;
 
 import android.appwidget.AppWidgetManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,7 +43,9 @@ import java.util.concurrent.TimeUnit;
 public class sendData extends AppCompatActivity {
 
     ArrayList<ImageData> takenImagesArray;
+    TextView header;
     TextView dataView;
+    TextView footer;
 
     private RetrofitConnetctions retrofitConnetctions;
 
@@ -49,9 +53,12 @@ public class sendData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_data);
+        this.getSupportActionBar().hide();
 
         //connect view to variables
+        header = findViewById(R.id.header);
         dataView = findViewById(R.id.mTVDatePreview);
+        footer = findViewById(R.id.footer);
 
         Intent intent = getIntent();
         takenImagesArray = intent.getParcelableArrayListExtra("data");
@@ -63,8 +70,10 @@ public class sendData extends AppCompatActivity {
             e.printStackTrace();
         }
         Log.i("json",json);
-        dataView.setText(json+" Sending Data");
+        dataView.setText(json);
 
+        //Contentresolver to delete pictures after use
+        ContentResolver contentResolver = this.getContentResolver();
 
         //Get the uri's of the images
         Uri frontImageUri =takenImagesArray.get(0).getImage();
@@ -84,6 +93,7 @@ public class sendData extends AppCompatActivity {
 
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(5000, TimeUnit.SECONDS)
+                .writeTimeout(5000,TimeUnit.MINUTES)
                 .connectTimeout(5000, TimeUnit.SECONDS)
                 .build();
 
@@ -112,12 +122,18 @@ public class sendData extends AppCompatActivity {
 
 
 
-
+        //Data sent back
         Call<MeasureResult>  call = retrofitConnetctions.measureResult(scales,yLijnen,frontImage,sideImage);
         call.enqueue(new Callback<MeasureResult>() {
             @Override
             public void onResponse(Call<MeasureResult> call, Response<MeasureResult> response) {
+                header.setText("METINGEN");
                 dataView.setText(response.body().getString());
+                footer.setVisibility(View.INVISIBLE);
+
+                //Deletes used pictures from phone
+                contentResolver.delete(frontImageUri,null,null);
+                contentResolver.delete(sideImageUri,null,null);
             }
 
             @Override
@@ -125,6 +141,7 @@ public class sendData extends AppCompatActivity {
                 throwable.printStackTrace();
             }
         });
+
     }
 
     public String firstLetterToUppercase(String string){
