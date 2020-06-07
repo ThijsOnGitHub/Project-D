@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.projectd">
+    <!-- Toestemming om internet te gebruiker -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <!-- Toestemming om camera te gebruiken en gemaakte foto op te slaan op externe opslag. -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -12,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-  
+
          <activity android:name=".sendData">
         </activity>
         <activity android:name=".SetLines">

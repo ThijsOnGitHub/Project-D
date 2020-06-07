@@ -43,48 +43,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--automatic photo switch-->
-    <Switch
-        android:id="@+id/text1"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:drawableStart="@drawable/bodyicon"
-        android:text="Maak automatisch een foto als ik in de juiste positie sta"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@color/Text"
-        app:layout_constraintBottom_toTopOf="@+id/text2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text" />
-
-    <!--timer text-->
+    <!--timer input-->
     <TextView
         android:id="@+id/text2"
         android:layout_width="200dp"
         android:layout_height="25dp"
         android:drawableStart="@drawable/timericon"
         android:text="Automatische foto na"
-        android:textColor="@color/Text"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:layout_constraintBottom_toTopOf="@+id/back"
-        app:layout_constraintStart_toStartOf="@+id/text1"
-        app:layout_constraintTop_toBottomOf="@+id/text" />
-
-    <!--timer input-->
+        android:textColor="@color/Text"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="@+id/text"
+        app:layout_constraintTop_toBottomOf="@+id/camerachoice" />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/entertext"
         android:layout_width="60dp"
         android:layout_height="75dp"
         app:layout_constraintBottom_toBottomOf="@+id/text2"
-        app:layout_constraintEnd_toStartOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/text2"
         app:layout_constraintTop_toTopOf="@+id/text2">
-
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/timer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:text="3"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Switch
+        android:id="@+id/camerachoice"
+        android:layout_width="250dp"
+        android:layout_height="25dp"
+        android:drawableStart="@drawable/cameraicon"
+        android:text="Gebruik selfie camera"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/Text"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/text2"
+        app:layout_constraintTop_toBottomOf="@+id/text" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -93,7 +92,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/HeaderText"
         app:layout_constraintBottom_toBottomOf="@+id/entertext"
-        app:layout_constraintEnd_toEndOf="@+id/text1"
+        app:layout_constraintStart_toEndOf="@+id/entertext"
         app:layout_constraintTop_toTopOf="@+id/entertext" />
 
     <Button
@@ -118,4 +117,5 @@
         android:textColor="@color/HeaderText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
