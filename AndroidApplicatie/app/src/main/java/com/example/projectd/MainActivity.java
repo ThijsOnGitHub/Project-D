@@ -11,7 +11,6 @@ import android.widget.*;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
     Button ToQRCodeButton;
-    Button ToLengthButton;
     Button HelpButton;
 
     @Override
@@ -22,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
         //The Buttons
         ToQRCodeButton = findViewById(R.id.ToQRButton);
-        ToLengthButton = findViewById(R.id.ToLength);
         HelpButton = findViewById(R.id.Help);
 
         //The other pages
@@ -40,9 +38,6 @@ public class MainActivity extends AppCompatActivity {
         //OnClicks
         ToQRCodeButton.setOnClickListener(v ->{
             startActivity(qr);
-        });
-        ToLengthButton.setOnClickListener(v ->{
-            startActivity(length);
         });
         HelpButton.setOnClickListener(v ->{
             startActivity(help);
