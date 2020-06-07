@@ -187,7 +187,6 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onOrientationChanged(int orientation) {
                 int rotation;
-
                 // Monitors orientation values to determine the target rotation value
                 if (orientation >= 45 && orientation < 135) {
                     rotation = Surface.ROTATION_270;
@@ -198,7 +197,6 @@ public class CameraActivity extends AppCompatActivity {
                 } else {
                     rotation = Surface.ROTATION_0;
                 }
-
                 imageCapture.setTargetRotation(rotation);
                 imageAnalysis.setTargetRotation(rotation);
             }

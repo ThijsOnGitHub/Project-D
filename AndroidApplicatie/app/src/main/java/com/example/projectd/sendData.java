@@ -11,6 +11,7 @@ import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,7 +43,9 @@ import java.util.concurrent.TimeUnit;
 public class sendData extends AppCompatActivity {
 
     ArrayList<ImageData> takenImagesArray;
+    TextView header;
     TextView dataView;
+    TextView footer;
 
     private RetrofitConnetctions retrofitConnetctions;
 
@@ -50,9 +53,12 @@ public class sendData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_data);
+        this.getSupportActionBar().hide();
 
         //connect view to variables
+        header = findViewById(R.id.header);
         dataView = findViewById(R.id.mTVDatePreview);
+        footer = findViewById(R.id.footer);
 
         Intent intent = getIntent();
         takenImagesArray = intent.getParcelableArrayListExtra("data");
@@ -64,7 +70,7 @@ public class sendData extends AppCompatActivity {
             e.printStackTrace();
         }
         Log.i("json",json);
-        dataView.setText(json+" Sending Data");
+        dataView.setText(json);
 
         //Contentresolver to delete pictures after use
         ContentResolver contentResolver = this.getContentResolver();
@@ -116,14 +122,16 @@ public class sendData extends AppCompatActivity {
 
 
 
-
+        //Data sent back
         Call<MeasureResult>  call = retrofitConnetctions.measureResult(scales,yLijnen,frontImage,sideImage);
         call.enqueue(new Callback<MeasureResult>() {
             @Override
             public void onResponse(Call<MeasureResult> call, Response<MeasureResult> response) {
+                header.setText("METINGEN");
                 dataView.setText(response.body().getString());
+                footer.setVisibility(View.INVISIBLE);
 
-                //TODO check if this works
+                //Deletes used pictures from phone
                 contentResolver.delete(frontImageUri,null,null);
                 contentResolver.delete(sideImageUri,null,null);
             }
