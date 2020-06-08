@@ -26,11 +26,17 @@ public class SetLines extends AppCompatActivity {
     ConstraintLayout dragView;
     Button next;
 
-    //
-    ArrayList<ImageData> takenImagesArray;
-    int imageIndex;
+    //index to get track of progress
+    int globalIndex;
 
+    //List with de data of the image
+    ArrayList<ImageData> takenImagesArray;
+
+    //the index of the image that's being handeld
+    int imageIndex;
+    //array with points that needs to get handled
     MeasurePoints[] measurePoints;
+    //index of point thats needs to get handled
     int measurePointIndex;
 
 
@@ -55,6 +61,9 @@ public class SetLines extends AppCompatActivity {
             throw new Error("No exta's detected");
         }
 
+        //set global index
+        globalIndex=0;
+
         //set the index for the takenImagesArray
         imageIndex = 0;
 
@@ -68,6 +77,9 @@ public class SetLines extends AppCompatActivity {
         //Sets views in the correct value
         this.updateFeedbackText();
         this.updateImage();
+
+        //Sets the line on a right position
+        setLinePostion(1);
 
 
         //Code to move the line
@@ -114,16 +126,31 @@ public class SetLines extends AppCompatActivity {
             }
         });
 
+
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    goToNext();
+                    increaseLineIndex(1,true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(globalIndex==0){
+            super.onBackPressed();
+        }else{
+            try {
+                increaseLineIndex(-1,false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -192,25 +219,25 @@ public class SetLines extends AppCompatActivity {
 
     //Go to the next measure point that need to be set
     //If all te points are set it goes to the next activity
-    private void goToNext() throws IOException {
-        getCurrentImage().setMeasurePoints(measurePoints[measurePointIndex], getYposition());
-        if(measurePointIndex < measurePoints.length-1){
-            measurePointIndex++;
-            updateFeedbackText();
-        //Go to the next image
+    private void increaseLineIndex(int amount,boolean setValue) throws IOException {
+        if(setValue){
+            getCurrentImage().setMeasurePoints(measurePoints[measurePointIndex], getYposition());
+        }
+        int takenImagesSize=takenImagesArray.size();
+        //sets the indexes
+        globalIndex += amount;
+        measurePointIndex = globalIndex % measurePoints.length;
+        imageIndex = (int)globalIndex/measurePoints.length;
+
+        if(globalIndex>takenImagesSize*measurePoints.length-1) {
+            //go to the next activaty
+            Intent sendDataIntent = new Intent(getApplicationContext(), sendData.class);
+            sendDataIntent.putParcelableArrayListExtra("data", takenImagesArray);
+            this.startActivity(sendDataIntent);
         }else{
-            if(imageIndex<takenImagesArray.size()-1){
-                imageIndex++;
-                measurePointIndex=0;
-                updateImage();
-                updateFeedbackText();
-            //all images done go to the next activity
-            }else{
-                Intent sendDataIntent = new Intent(getApplicationContext(),sendData.class);
-                sendDataIntent.putParcelableArrayListExtra("data",takenImagesArray);
-                this.startActivity(sendDataIntent);
-                //Send the data to the server
-            }
+            //update the fields
+            updateFeedbackText();
+            updateImage();
         }
     }
 
@@ -243,3 +270,4 @@ public class SetLines extends AppCompatActivity {
     }
 
 }
+
