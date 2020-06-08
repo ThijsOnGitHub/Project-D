@@ -219,10 +219,12 @@ public class CameraActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
                 String msg = String.valueOf(millisUntilFinished / 1000 + 1);
                 tts.speak(msg, TextToSpeech.QUEUE_ADD,null,"1");
+                mMaakFotoBtn.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFinish() {
+                mMaakFotoBtn.setVisibility(View.VISIBLE);
                 if (mQRdetectedText.getVisibility() == View.VISIBLE){
                     String photoname = System.currentTimeMillis() + ".jpeg";
                     ContentValues contentValues = new ContentValues();
