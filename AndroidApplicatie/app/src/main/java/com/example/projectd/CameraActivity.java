@@ -93,6 +93,7 @@ public class CameraActivity extends AppCompatActivity {
         mQRdetectedText = findViewById(R.id.QRdetected);
         cameraFeedback = findViewById(R.id.mTVcameraFeedback);
 
+
         //Create list with positions to be photographed
         poses = new String[]{"front", "side"};
 
@@ -184,6 +185,10 @@ public class CameraActivity extends AppCompatActivity {
             this.startActivity(nextIntent);
         } else {
             updateFeedback();
+
+            TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
+            tts.setLanguage(new Locale("nl","NL"));
+            tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
         }
 
     }
@@ -277,9 +282,6 @@ public class CameraActivity extends AppCompatActivity {
                                 public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
                                     tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
                                     qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
-                                    if(poseIndex == 0){
-                                        tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
-                                    }
                                 }
                                 @Override
                                 public void onError(ImageCaptureException error) {
