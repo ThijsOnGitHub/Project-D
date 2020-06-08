@@ -122,6 +122,8 @@ public class CameraActivity extends AppCompatActivity {
         }else{
             poseIndex--;
             updateFeedback();
+            ContentResolver contentResolver = this.getContentResolver();
+            contentResolver.delete(takenImagesArray.get(0).getImage(),null,null);
         }
 
     }

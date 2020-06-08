@@ -1,5 +1,6 @@
 package com.example.projectd;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -144,6 +145,8 @@ public class SetLines extends AppCompatActivity {
     public void onBackPressed() {
         if(globalIndex==0){
             super.onBackPressed();
+            ContentResolver contentResolver = this.getContentResolver();
+            contentResolver.delete(takenImagesArray.get(1).getImage(),null,null);
         }else{
             try {
                 increaseLineIndex(-1,false);

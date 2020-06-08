@@ -76,7 +76,7 @@ public class sendData extends AppCompatActivity {
         ContentResolver contentResolver = this.getContentResolver();
 
         //Get the uri's of the images
-        Uri frontImageUri =takenImagesArray.get(0).getImage();
+        Uri frontImageUri = takenImagesArray.get(0).getImage();
         Uri sideImageUri  = takenImagesArray.get(1).getImage();
 
         //get the files of the images
