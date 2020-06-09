@@ -130,11 +130,7 @@ public class SetLines extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    increaseLineIndex(1,true);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                increaseLineIndex(1,true);
             }
         });
 
@@ -145,18 +141,19 @@ public class SetLines extends AppCompatActivity {
         if(globalIndex==0){
             super.onBackPressed();
         }else{
-            try {
                 increaseLineIndex(-1,false);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
     }
 
-    public double getImageHeight(Uri image) throws IOException {
-         Bitmap bitmap= MediaStore.Images.Media.getBitmap(getContentResolver(),image);
-         double height=bitmap.getHeight();
+    public double getImageHeight(Uri image)  {
+        Bitmap bitmap= null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        double height=bitmap.getHeight();
          Log.i("height",Double.toString(height));
          return height;
     }
@@ -181,7 +178,7 @@ public class SetLines extends AppCompatActivity {
         return percentage;
     }
 
-    public int getYposition() throws IOException {
+    public int getYposition()  {
         return (int) Math.round(getImageHeight(getCurrentImage().getImage())*getLinePercentage());
 }
 
@@ -219,15 +216,15 @@ public class SetLines extends AppCompatActivity {
 
     //Go to the next measure point that need to be set
     //If all te points are set it goes to the next activity
-    private void increaseLineIndex(int amount,boolean setValue) throws IOException {
+    private void increaseLineIndex(int amount,boolean setValue)  {
         if(setValue){
             getCurrentImage().setMeasurePoints(measurePoints[measurePointIndex], getYposition());
         }
         int takenImagesSize=takenImagesArray.size();
         //sets the indexes
         globalIndex += amount;
-        measurePointIndex = globalIndex % measurePoints.length;
-        imageIndex = (int)globalIndex/measurePoints.length;
+        measurePointIndex = (int)globalIndex / takenImagesSize;
+        imageIndex = (int)globalIndex % takenImagesSize;
 
         if(globalIndex>takenImagesSize*measurePoints.length-1) {
             //go to the next activaty
