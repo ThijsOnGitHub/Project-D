@@ -44,6 +44,7 @@ public class SetLines extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_lines);
+        this.getSupportActionBar().hide();
 
         //Connect variables with views
         imageView =findViewById(R.id.mIVTakenImagePreview);

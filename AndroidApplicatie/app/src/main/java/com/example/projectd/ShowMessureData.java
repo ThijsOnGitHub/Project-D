@@ -22,6 +22,7 @@ public class ShowMessureData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_messure_data);
+        this.getSupportActionBar().hide();
 
         //Set views
         resultTextView = findViewById(R.id.mTVresultaat);
