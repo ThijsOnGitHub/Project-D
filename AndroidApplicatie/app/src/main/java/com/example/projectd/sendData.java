@@ -1,28 +1,20 @@
 package com.example.projectd;
 
-import android.appwidget.AppWidgetManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.FileUtils;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okio.BufferedSink;
 import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
@@ -32,9 +24,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -123,21 +112,27 @@ public class sendData extends AppCompatActivity {
 
 
         //Data sent back
-        Call<MeasureResult>  call = retrofitConnetctions.measureResult(scales,yLijnen,frontImage,sideImage);
-        call.enqueue(new Callback<MeasureResult>() {
-            @Override
-            public void onResponse(Call<MeasureResult> call, Response<MeasureResult> response) {
-                header.setText("METINGEN");
-                dataView.setText(response.body().getString());
-                footer.setVisibility(View.INVISIBLE);
+        Call<HashMap<String, Double>> call = retrofitConnetctions.measureResult(scales,yLijnen,frontImage,sideImage);
 
-                //Deletes used pictures from phone
-                contentResolver.delete(frontImageUri,null,null);
-                contentResolver.delete(sideImageUri,null,null);
+        call.enqueue(new Callback<HashMap<String, Double>>() {
+            @Override
+            public void onResponse(Call<HashMap<String, Double>> call, Response<HashMap<String, Double>> response) {
+                if(response.isSuccessful()){
+                    Intent toResult = new Intent(getApplicationContext(),ShowMessureData.class);
+                    toResult.putExtra("results", response.body());
+                    startActivity(toResult);
+
+                    //Deletes used pictures from phone
+                    contentResolver.delete(frontImageUri,null,null);
+                    contentResolver.delete(sideImageUri,null,null);
+                }else{
+                    Log.i("result",response.toString());
+                }
+
             }
 
             @Override
-            public void onFailure(Call<MeasureResult> call, Throwable throwable) {
+            public void onFailure(Call<HashMap<String, Double>> call, Throwable throwable) {
                 throwable.printStackTrace();
             }
         });
