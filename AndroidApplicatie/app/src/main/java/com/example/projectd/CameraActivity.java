@@ -73,6 +73,8 @@ public class CameraActivity extends AppCompatActivity {
     private int chosencamera;
 
 
+    private TextToSpeech tts;
+
     //Elements
     Button mMaakFotoBtn;
     ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -98,6 +100,10 @@ public class CameraActivity extends AppCompatActivity {
 
         //Update the feedback
         updateFeedback();
+
+        //Text to Speech initialization
+        TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
+        tts.setLanguage(new Locale("nl","NL"));
 
         //Intiate takenImageMap
         takenImagesArray = new ArrayList<>();
@@ -186,6 +192,10 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
+    public void tookWrongImage(){
+       tts.speak("Probeer opnieuw", TextToSpeech.QUEUE_ADD,null,"1");
+    }
+
 
     //Select a camera and bind the life cycle and use cases
     void bindPreview(Context context, @NonNull ProcessCameraProvider cameraProvider) {
@@ -244,10 +254,8 @@ public class CameraActivity extends AppCompatActivity {
         //De filename van de foto wordt hier ingesteld
 
 
-        
-        //Text to Speech initialization
-        TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
-        tts.setLanguage(new Locale("nl","NL"));
+
+
         mMaakFotoBtn.setOnClickListener(v -> new CountDownTimer(timercount, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

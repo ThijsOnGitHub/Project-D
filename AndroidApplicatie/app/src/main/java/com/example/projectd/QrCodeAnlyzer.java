@@ -95,8 +95,10 @@ public class QrCodeAnlyzer implements ImageAnalysis.Analyzer {
                         double ratio= mellimetersWide/pixelsWide;
                         Log.i("ratio",ratio+"");
                         cameraActivity.tookCorrectImage(ratio,imageUri);
+                        return;
                     }
                 }
+                cameraActivity.tookWrongImage();
             }
             })
                 .addOnFailureListener(new OnFailureListener() {
