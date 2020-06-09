@@ -102,7 +102,7 @@ public class CameraActivity extends AppCompatActivity {
         updateFeedback();
 
         //Text to Speech initialization
-        TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
+        tts = new TextToSpeech(getApplicationContext(), status -> {});
         tts.setLanguage(new Locale("nl","NL"));
 
         //Intiate takenImageMap
@@ -172,7 +172,7 @@ public class CameraActivity extends AppCompatActivity {
     public void tookCorrectImage(double ratio, Uri ImageUri) {
         this.ratio = ratio;
         ImageData data =new ImageData(poses[poseIndex],ImageUri,ratio);
-
+        tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
         //overrides if it don't exists
         if(poseIndex<takenImagesArray.size()){
             takenImagesArray.set(poseIndex,data);
@@ -187,6 +187,7 @@ public class CameraActivity extends AppCompatActivity {
             cameraProvider.unbindAll();
             this.startActivity(nextIntent);
         } else {
+            tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
             updateFeedback();
         }
 
@@ -279,11 +280,7 @@ public class CameraActivity extends AppCompatActivity {
                             new ImageCapture.OnImageSavedCallback() {
                                 @Override
                                 public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                                    tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
                                     qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
-                                    if(poseIndex == 0){
-                                        tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
-                                    }
                                 }
                                 @Override
                                 public void onError(ImageCaptureException error) {
