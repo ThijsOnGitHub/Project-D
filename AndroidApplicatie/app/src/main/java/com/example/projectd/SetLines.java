@@ -137,6 +137,12 @@ public class SetLines extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        increaseLineIndex(-1,false);
+    }
+
+    @Override
     public void onBackPressed() {
         if(globalIndex==0){
             super.onBackPressed();
