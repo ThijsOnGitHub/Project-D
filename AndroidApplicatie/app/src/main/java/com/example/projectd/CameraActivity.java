@@ -73,6 +73,8 @@ public class CameraActivity extends AppCompatActivity {
     private int chosencamera;
 
 
+    private TextToSpeech tts;
+
     //Elements
     Button mMaakFotoBtn;
     ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -99,6 +101,10 @@ public class CameraActivity extends AppCompatActivity {
 
         //Update the feedback
         updateFeedback();
+
+        //Text to Speech initialization
+        tts = new TextToSpeech(getApplicationContext(), status -> {});
+        tts.setLanguage(new Locale("nl","NL"));
 
         //Intiate takenImageMap
         takenImagesArray = new ArrayList<>();
@@ -169,7 +175,7 @@ public class CameraActivity extends AppCompatActivity {
     public void tookCorrectImage(double ratio, Uri ImageUri) {
         this.ratio = ratio;
         ImageData data =new ImageData(poses[poseIndex],ImageUri,ratio);
-
+        tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
         //overrides if it don't exists
         if(poseIndex<takenImagesArray.size()){
             takenImagesArray.set(poseIndex,data);
@@ -184,6 +190,7 @@ public class CameraActivity extends AppCompatActivity {
             cameraProvider.unbindAll();
             this.startActivity(nextIntent);
         } else {
+            tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
             updateFeedback();
 
             TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
@@ -191,6 +198,10 @@ public class CameraActivity extends AppCompatActivity {
             tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
         }
 
+    }
+
+    public void tookWrongImage(){
+       tts.speak("Probeer opnieuw", TextToSpeech.QUEUE_ADD,null,"1");
     }
 
 
@@ -251,10 +262,8 @@ public class CameraActivity extends AppCompatActivity {
         //De filename van de foto wordt hier ingesteld
 
 
-        
-        //Text to Speech initialization
-        TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
-        tts.setLanguage(new Locale("nl","NL"));
+
+
         mMaakFotoBtn.setOnClickListener(v -> new CountDownTimer(timercount, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -280,7 +289,6 @@ public class CameraActivity extends AppCompatActivity {
                             new ImageCapture.OnImageSavedCallback() {
                                 @Override
                                 public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                                    tts.speak("Foto", TextToSpeech.QUEUE_ADD,null,"1");
                                     qrCodeAnlyzer.ScanQRcodeFile(context, outputFileResults.getSavedUri());
                                 }
                                 @Override
