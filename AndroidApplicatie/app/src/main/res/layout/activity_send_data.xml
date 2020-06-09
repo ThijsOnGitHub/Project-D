@@ -31,16 +31,6 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Logo" />
-    <TextView
-        android:id="@+id/mTVDatePreview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="[insert data here]"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/footer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
 
     <TextView
         android:id="@+id/footer"
