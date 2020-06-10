@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ProjectD</string>
     <string name="take_picture">maak foto</string>
-    <string name="front">voorkant</string>
     <string name="side">zijkant</string>
+    <string name="front">voorkant</string>
     <string name="waist">taille</string>
     <string name="chest">borst</string>
-    <string name="take_picture_of">neem foto van</string>
+    <string name="take_picture_of">"maak "</string>
     <string name="hip">heup</string>
 </resources>

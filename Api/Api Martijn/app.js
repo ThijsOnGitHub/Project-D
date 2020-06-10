@@ -1,7 +1,7 @@
 const express = require("express");
 const fileUpload = require("express-fileupload");
 const { createCanvas } = require('canvas');
-Canvas = require('canvas')
+Canvas = require('canvas');
 
 const tensorFlow = require("@tensorflow/tfjs-node");
 const bodyPix = require("@tensorflow-models/body-pix");
@@ -11,6 +11,14 @@ const bodyPix = require("@tensorflow-models/body-pix");
 // parameters:
 // frontImage : file
 // sideImage : file
+// scaleFront : number (cm)
+// scaleSide : number (cm)
+// yLineChestFront : number
+// yLineChestSide : number
+// yLineWaistFront : number
+// yLineWaistSide : number
+// yLineHipFront : number
+// yLineHipSide : number
 
 var app = express();
 app.use(fileUpload());
@@ -26,20 +34,27 @@ app.get("/", (req, res, next) => {
 app.post("/measure", async(req, res, next) => {
     const frontImage = await jsConvertImageToImageElement(req.files.frontImage);
     const sideImage = await jsConvertImageToImageElement(req.files.sideImage);
-
-    const frontImageSegmentation = await jsGetSegmentation(frontImage);
-    const sideImageSegmentation = await jsGetSegmentation(sideImage);
+    const scaleFront = req.body.scaleFront;
+    const scaleSide = req.body.scaleSide;
+    const yLineChestFront = req.body.yLineChestFront;
+    const yLineChestSide = req.body.yLineChestSide;
+    const yLineHipFront = req.body.yLineHipFront;
+    const yLineHipSide = req.body.yLineHipSide;
+    const yLineWaistFront = req.body.yLineWaistFront;
+    const yLineWaistSide = req.body.yLineWaistSide;
 
     const imageInformation = {
         frontImage : frontImage,
-        frontImageSegmentation : frontImageSegmentation,
+        frontImageSegmentation : await jsGetSegmentation(frontImage),
         sideImage: sideImage,
-        sideImageSegmentation : sideImageSegmentation
+        sideImageSegmentation : await jsGetSegmentation(sideImage),
+        scaleFront : scaleFront,
+        scaleSide : scaleSide,
     };
 
-    const chestSize = await jsMeasureChest(imageInformation);
-    const hipSize = await jsMeasureHip(imageInformation);
-    const waistSize = await jsMeasureWaist(imageInformation);
+    const chestSize = await jsMeasureChest(imageInformation, yLineChestFront, yLineChestSide);
+    const hipSize = await jsMeasureHip(imageInformation, yLineHipFront, yLineHipSide);
+    const waistSize = await jsMeasureWaist(imageInformation, yLineWaistFront, yLineWaistSide);
 
     res.json({ 
         chestSize : chestSize,
@@ -70,102 +85,44 @@ async function jsConvertImageToImageElement(image){
 
 //#region Chest
 
-async function jsMeasureChest(imageInformation){
-    //const chestYLine = jsGetChestYLine(imageInformation.frontImage);
-    //const chestFrontSize = jsMeasureChestFront(chestYLine, imageInformation.frontImageSegmentation);
-    //const chestSideSize = jsMeasureChestSide(chestYLine, imageInformation.sideImageSegmentation);
+async function jsMeasureChest(imageInformation, yLineChestFront, yLineChestSide){
+    const chestSizeFront = await jsCalculateLineLength(yLineChestFront, imageInformation.frontImageSegmentation, imageInformation.scaleFront);
+    const chestSizeSide = await jsCalculateLineLength(yLineChestSide, imageInformation.sideImageSegmentation, imageInformation.scaleSide);
 
-    //return jsCalculatePerimeter(chestFrontSize, chestSideSize);
-    return 0;
-}
-
-async function jsMeasureChestFront(yLine, segmentation){
-
-    var measureParts = []
-
-    return await jsCalculateLineLength(yLine, segmentation, measureParts);
-}
-
-async function jsMeasureChestSide(yLine, segmentation){
-
-    var measureParts = []
-
-    return await jsCalculateLineLength(yLine, segmentation, measureParts);
-}
-
-async function jsGetChestYLine(image){
-
+    return await jsCalculatePerimeter(chestSizeFront, chestSizeSide);
 }
 
 //#endregion
 
 //#region Hip
 
-async function jsMeasureHip(imageInformation){
-    const hipYLine = await jsGetHipYLine(imageInformation.frontImage);
-    const hipFrontSize = await jsMeasureHipFront(hipYLine, imageInformation.frontImageSegmentation);
-    const hipSideSize = await jsMeasureHipSide(hipYLine, imageInformation.sideImageSegmentation);
+async function jsMeasureHip(imageInformation, yLineHipFront, yLineHipSide){
+    const hipSizeFront = await jsCalculateLineLength(yLineHipFront, imageInformation.frontImageSegmentation, imageInformation.scaleFront);
+    const hipSizeSide = await jsCalculateLineLength(yLineHipSide, imageInformation.sideImageSegmentation, imageInformation.scaleSide);
 
-    return jsCalculatePerimeter(hipFrontSize, hipSideSize);
-}
-
-async function jsMeasureHipFront(yLine, segmentation){
-    //rightUpperLegFront, rightUpperLegBack, leftUpperLegFront, leftUpperLegBack, torsoFront, torsoBack
-    var measureParts = [2,4,6,7,12,13]
-
-    return await jsCalculateLineLength(yLine, segmentation, measureParts);
-}
-
-async function jsMeasureHipSide(yLine, segmentation){
-    //rightUpperLegFront, rightUpperLegBack, leftUpperLegFront, leftUpperLegBack, torsoFront, torsoBack
-    var measureParts = [2,4,6,7,12,13]
-
-    return await jsCalculateLineLength(yLine, segmentation, measureParts);
-}
-
-async function jsGetHipYLine(image){
-    var poseData = await jsConvertImageElementToPoseData(image);
-
-    return Math.round((poseData.leftHip.position.y + poseData.rightHip.position.y)/2);
+    return await jsCalculatePerimeter(hipSizeFront, hipSizeSide);
 }
 
 //#endregion
 
 //#region Waist
 
-async function jsMeasureWaist(imageInformation){
-    //const waistYLine = jsGetWaistYLine(imageInformation.frontImage);
-    //const waistFrontSize = jsMeasureWaistFront(waistYLine, imageInformation.frontImageSegmentation);
-    //const waistSideSize = jsMeasureWaistSide(waistYLine, imageInformation.sideImageSegmentation);
+async function jsMeasureWaist(imageInformation, yLineWaistFront, yLineWaistSide){
+    const waistSizeFront = await jsCalculateLineLength(yLineWaistFront, imageInformation.frontImageSegmentation, imageInformation.scaleFront);
+    const waistSizeSide = await jsCalculateLineLength(yLineWaistSide, imageInformation.sideImageSegmentation, imageInformation.scaleSide);
 
-    //return jsCalculatePerimeter(waistFrontSize, waistSideSize);
-    return 0;
-}
-
-async function jsMeasureWaistFront(yLine, segmentation){
-
-    var measureParts = []
-
-    return await jsCalculateLineLength(yLine, segmentation, measureParts);
-}
-
-async function jsMeasureWaistSide(yLine, segmentation){
-
-    var measureParts = []
-
-    return await jsCalculateLineLength(yLine, segmentation, measureParts);
-}
-
-async function jsGetWaistYLine(image){
-
+    return await jsCalculatePerimeter(waistSizeFront, waistSizeSide);
 }
 
 //#endregion
 
-async function jsCalculateLineLength(yLine, segmentation, measureParts){
+async function jsCalculateLineLength(yLine, segmentation, scale){
     var startPoint = segmentation.width * yLine;
     var endPoint = startPoint + segmentation.width;
     var outlinePixelNumber = [];
+    
+    // All parts excluding the head, arms and hand
+    var measureParts = [2,3,4,5,6,7,8,9,10,11,12,13];
 
     // Here the code cycles througt the point and detects a transition between parts
     for(var i = startPoint; i < endPoint; i++){
@@ -181,7 +138,9 @@ async function jsCalculateLineLength(yLine, segmentation, measureParts){
 
     outlinePixelNumber.sort((a,b) => b - a);
 
-    return outlinePixelNumber[0] - outlinePixelNumber[outlinePixelNumber.length-1];
+    var lengthInPixels = outlinePixelNumber[0] - outlinePixelNumber[outlinePixelNumber.length-1];
+
+    return lengthInPixels * scale;
 }
 
 async function jsCalculatePerimeter(width, depth){
@@ -189,38 +148,5 @@ async function jsCalculatePerimeter(width, depth){
     var b = depth / 2;
 
     //p≈ π(3(a+b)- √((3a+b)(a+3b)))
-    return Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)))
+    return Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)));
 }
-
-async function jsConvertImageElementToPoseData(image){
-    var segmentation = await jsGetSegmentation(image);
-    var poses = segmentation.allPoses;
-    var pose = poses[0];
-
-    var poseData = BodyParts
-    pose.keypoints.forEach((keyPoint) => {
-        poseData[keyPoint.part] = keyPoint;
-    });
-
-    return poseData;
-}
-
-var BodyParts=[
-    "nose",
-    "leftEye",
-    "rightEye", 
-    "leftEar",
-    "rightEar" ,
-    "leftShoulder", 
-    "rightShoulder", 
-    "leftElbow" ,
-    "rightElbow" ,
-    "leftWrist" ,
-    "rightWrist" ,
-    "leftHip" ,
-    "rightHip" ,
-    "leftKnee" ,
-    "rightKnee" ,
-    "leftAnkle" ,
-    "rightAnkle"
-]

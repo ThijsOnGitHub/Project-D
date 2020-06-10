@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".LengthActivity">
 
     <!--Tashira logo-->
     <ImageView
@@ -30,50 +30,70 @@
         app:srcCompat="@drawable/backgroundimage"
         android:contentDescription="Picture of a woman on a sky blue background" />
 
-    <!--"Kies je meet methode" text-->
+    <!--"Vul uw lengte in" text-->
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Kies je meet methode"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="Vul uw lengte in"
         android:textColor="@color/HeaderText"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--QR code button-->
-
-    <!--Length button-->
-
-    <!--Help button-->
-
-    <Button
-        android:id="@+id/ToQRButton"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/btn_rounded"
-        android:drawableTop="@drawable/qrcodeicon"
-        android:text="QR Code"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/Help"
+    <!--Vul hier lengte in-->
+    <!--TODO change icon to CM-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/entertext"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:layout_marginEnd="35dp"
+        app:layout_constraintBottom_toTopOf="@+id/forward"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text" />
+        app:layout_constraintTop_toTopOf="@id/text">
 
-    <Button
-        android:id="@+id/Help"
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Lengte"
+            android:inputType="number"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
+        android:text="cm"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/HeaderText"
+        app:layout_constraintBottom_toBottomOf="@+id/entertext"
+        app:layout_constraintStart_toEndOf="@+id/entertext"
+        app:layout_constraintTop_toTopOf="@+id/entertext" />
+
+    <Button
+        android:id="@+id/forward"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/btn_rounded"
-        android:text="Help"
+        android:text="Doorgaan"
         android:textColor="@color/HeaderText"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/btn_rounded"
+        android:text="Terug"
+        android:textColor="@color/HeaderText"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
