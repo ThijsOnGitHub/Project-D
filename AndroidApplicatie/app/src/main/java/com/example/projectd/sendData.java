@@ -33,7 +33,6 @@ public class sendData extends AppCompatActivity {
 
     ArrayList<ImageData> takenImagesArray;
     TextView header;
-    TextView dataView;
     TextView footer;
 
     private RetrofitConnetctions retrofitConnetctions;
@@ -46,7 +45,6 @@ public class sendData extends AppCompatActivity {
 
         //connect view to variables
         header = findViewById(R.id.header);
-        dataView = findViewById(R.id.mTVDatePreview);
         footer = findViewById(R.id.footer);
 
         Intent intent = getIntent();
@@ -59,13 +57,12 @@ public class sendData extends AppCompatActivity {
             e.printStackTrace();
         }
         Log.i("json",json);
-        dataView.setText(json);
 
         //Contentresolver to delete pictures after use
         ContentResolver contentResolver = this.getContentResolver();
 
         //Get the uri's of the images
-        Uri frontImageUri =takenImagesArray.get(0).getImage();
+        Uri frontImageUri = takenImagesArray.get(0).getImage();
         Uri sideImageUri  = takenImagesArray.get(1).getImage();
 
         //get the files of the images

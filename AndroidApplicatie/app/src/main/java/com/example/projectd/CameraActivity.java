@@ -95,6 +95,7 @@ public class CameraActivity extends AppCompatActivity {
         mQRdetectedText = findViewById(R.id.QRdetected);
         cameraFeedback = findViewById(R.id.mTVcameraFeedback);
 
+
         //Create list with positions to be photographed
         poses = new String[]{"front", "side"};
 
@@ -128,6 +129,8 @@ public class CameraActivity extends AppCompatActivity {
         }else{
             poseIndex--;
             updateFeedback();
+            ContentResolver contentResolver = this.getContentResolver();
+            contentResolver.delete(takenImagesArray.get(0).getImage(),null,null);
         }
 
     }
@@ -189,6 +192,7 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
             updateFeedback();
+            tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
         }
 
     }
@@ -262,10 +266,12 @@ public class CameraActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
                 String msg = String.valueOf(millisUntilFinished / 1000 + 1);
                 tts.speak(msg, TextToSpeech.QUEUE_ADD,null,"1");
+                mMaakFotoBtn.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFinish() {
+                mMaakFotoBtn.setVisibility(View.VISIBLE);
                 if (mQRdetectedText.getVisibility() == View.VISIBLE){
                     String photoname = System.currentTimeMillis() + ".jpeg";
                     ContentValues contentValues = new ContentValues();

@@ -26,7 +26,6 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.getSupportActionBar().hide();
         this.setContentView(R.layout.activity_settings);
-        //TODO set the settings
         mTimerSecinpt = findViewById(R.id.timer);
         mCameraSwtch = findViewById(R.id.camerachoice);
 
