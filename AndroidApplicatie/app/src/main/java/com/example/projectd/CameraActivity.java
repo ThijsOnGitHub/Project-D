@@ -192,9 +192,6 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
             updateFeedback();
-
-            TextToSpeech tts = new TextToSpeech(getApplicationContext(), status -> {});
-            tts.setLanguage(new Locale("nl","NL"));
             tts.speak("Neem nu een foto van uw zijkant", TextToSpeech.QUEUE_ADD,null,"1");
         }
 
